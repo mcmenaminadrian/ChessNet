@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+CONFIG   += c++14
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ChessNet
@@ -13,8 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    chessnet.cpp \
+    chessinput.cpp
 
-HEADERS  += mainwindow.hpp
+HEADERS  += mainwindow.hpp \
+    chessnet.hpp \
+    chessinput.hpp
 
 FORMS    += mainwindow.ui
