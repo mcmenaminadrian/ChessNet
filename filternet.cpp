@@ -17,9 +17,10 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 			//row by row construct and connect level one neurons
 			LevelOneNeuron neuro;
 			for (uint k = 0; k < field; k++) {
-				neuro.addConnection(i * width + j * span + k);
-				neuro.addConnection(k * width + j * span +
-					i * width);
+				for (uint l = 0; l < field; l++) {
+					neuro.addConnection(i * width + j * span +
+						+ l * width + k);
+				}
 			}
 			neurons.push_back(neuro);
 		}
