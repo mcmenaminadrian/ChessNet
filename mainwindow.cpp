@@ -4,6 +4,8 @@
 #include <cstdint>
 #include "sys/types.h"
 #include "chessinput.hpp"
+#include "leveloneneuron.hpp"
+#include "filternet.hpp"
 #include "chessnet.hpp"
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
@@ -13,12 +15,15 @@ using namespace std;
 static const uint imageWidth = 100;
 static const uint imageHeight = 100;
 static const uint convSpan = 1;
+static const uint field = 10;
+static const uint filters = 9;
+
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
-	ChessNet chess(imageWidth, imageHeight, convSpan);
+	ChessNet chess(imageWidth, imageHeight, convSpan, field, filters);
 	ui->setupUi(this);
 	ui->fileName->setVisible(false);
 	ui->progressNN->setVisible(false);

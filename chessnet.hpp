@@ -4,8 +4,11 @@
 class ChessNet
 {
 
+private:
+	std::vector<FilterNet> filtersLevelOne;
+
 public:
 	explicit ChessNet(const uint& width, const uint& height,
-		const uint& span);
+		const uint& span, const uint& field, const uint& filters);
 };
 #endif // CHESSNET_HPP

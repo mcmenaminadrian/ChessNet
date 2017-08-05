@@ -15,10 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     chessnet.cpp \
-    chessinput.cpp
+    chessinput.cpp \
+    filternet.cpp \
+    leveloneneuron.cpp
 
 HEADERS  += mainwindow.hpp \
     chessnet.hpp \
-    chessinput.hpp
+    chessinput.hpp \
+    filternet.hpp \
+    leveloneneuron.hpp
 
 FORMS    += mainwindow.ui
