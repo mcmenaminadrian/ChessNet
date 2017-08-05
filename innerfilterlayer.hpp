@@ -5,7 +5,8 @@
 class InnerFilterLayer
 {
 public:
-	InnerFilterLayer(const FilterNet& topLayer);
+	InnerFilterLayer(const FilterNet& topLayer,
+		const uint& topCount);
 };
 
 #endif // INNERFILTERLAYER_HPP

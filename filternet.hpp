@@ -13,6 +13,7 @@ public:
 	FilterNet(const uint& height, const uint& width, const int& field,
 		const uint& span, ChessInput& inputLayer);
 	void assignFilterWeights(const std::vector<double>& weights);
+	uint getNetCount() const;
 
 };
 

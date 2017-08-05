@@ -6,11 +6,13 @@ using namespace std;
 static const uint secondSpan = 1;
 static const uint secondField = 3;
 
-InnerFilterLayer::InnerFilterLayer(const FilterNet& topLayer)
+InnerFilterLayer::InnerFilterLayer(const FilterNet& topLayer,
+	const uint& topCount)
 {
-	for (uint i = 0; i < topLayer.size(); i++) {
-		uint layerSize = calculateSecondLayerSize(secondSpan,
-			secondField);
+	uint layerSize = calculateSecondLayerSize(secondSpan,
+		secondField);
+	for (uint i = 0; i < topCount; i++) {
+
 	}
 }
 

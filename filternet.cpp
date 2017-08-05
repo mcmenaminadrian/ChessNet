@@ -8,6 +8,9 @@
 
 using namespace std;
 
+static const uint secondLayerSpan = 1;
+static const uint secondLayerField = 3;
+
 FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 	const uint& field, ChessInput& inputLayer)
 {
@@ -18,17 +21,34 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 	for (uint i = 0; i < netCount; i++) {
 		for (uint j = 0; j < netCount; j++) {
 			//row by row construct and connect level one neurons
-			LevelOneNeuron neuro;
+			HiddenNeuron neuro;
 			uint rowIndex = i * width;
 			uint jAdvance = j * span;
 			for (uint k = 0; k < field; k++) {
 				uint kRow = k * width;
 				for (uint l = 0; l < field; l++) {
-					neuro.addConnection(rowIndex + jAdvance +
+					neuro.addConnection(rowIndex + jAdvance
 						+ kRow + l);
 				}
 			}
 			neurons.push_back(neuro);
+		}
+	}
+	uint secondLayerSize = calculateSecondLayerSize(secondLayerSpan,
+		netCount);
+	for (uint i = 0; i < secondLayerSize; i++) {
+		for (uint j = 0; j < secondLayerSize; j++) {
+			HiddenNeuron neuro;
+			uint rowIndex = i * netCount;
+			uint jAdvance = j * secondLayerSpan;
+			for (uint k = 0; k < secondLayerField; k++) {
+				uint kRow = k * netCount;
+				for (uint l = 0; l < secondLayerField; l++) {
+					neuro.addConnection((rowIndex + jAdvance +
+					+ kRow +l));
+				}
+			}
+			secondNeurons.push_back(neuro);
 		}
 	}
 }
@@ -57,4 +77,9 @@ uint FilterNet::calculateSecondLayerSize(const uint& secondSpan,
 	const uint& secondField) const
 {
 	return 1 + (netCount - secondField)/ secondSpan
+}
+
+uint FilterNet::getNetCount() const
+{
+	return netCount;
 }

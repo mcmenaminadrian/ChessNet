@@ -5,32 +5,32 @@
 
 using namespace std;
 
-LevelOneNeuron::LevelOneNeuron()
+HiddenNeuron::HiddenNeuron()
 {
 	bias = 1.0;
 }
 
-void LevelOneNeuron::addConnection(const uint &number)
+void HiddenNeuron::addConnection(const uint &number)
 {
 	connections.push_back(number);
 }
 
-void LevelOneNeuron::setWeight(const double& weightIn)
+void HiddenNeuron::setWeight(const double& weightIn)
 {
 	weight = weightIn;
 }
 
-double LevelOneNeuron::getWeight() const
+double HiddenNeuron::getWeight() const
 {
 	return weight;
 }
 
-void LevelOneNeuron::setBias(const double& weightIn)
+void HiddenNeuron::setBias(const double& weightIn)
 {
 	bias = weightIn;
 }
 
-double LevelOneNeuron::getBias() const
+double HiddenNeuron::getBias() const
 {
 	return bias;
 }
