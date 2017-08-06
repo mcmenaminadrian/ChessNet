@@ -136,3 +136,22 @@ ostream& FilterNet::streamOutWeights(ostream& os) const
 
 }
 
+istream& FilterNet::streamInWeights(istream& is)
+{
+	topWeights.clear();
+	for (uint i = 0; i < fieldSize * fieldSize; i++)
+	{
+		double x;
+		is >> x;
+		topWeights.push_back(x);
+	}
+	bottomWeights.clear();
+	for (uint i = 0; i < secondLayerField * secondLayerField; i++)
+	{
+		double x;
+		is >> x;
+		bottomWeights.push_back(x);
+	}
+	return is;
+}
+

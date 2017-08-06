@@ -24,7 +24,7 @@ public:
 		const std::vector<double>& weightsBottom);
 	uint getNetCount() const;
 	std::ostream& streamOutWeights(std::ostream& os) const;
-
+	std::istream& streamInWeights(std::istream& is);
 };
 
 #endif // FILTERNET_HPP

@@ -14,6 +14,11 @@ ostream& operator<<(ostream& os, const FilterNet& filter)
 	return filter.streamOutWeights(os);
 }
 
+istream& operator>>(istream& is, FilterNet& filter)
+{
+	return filter.streamInWeights(is);
+}
+
 
 ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 	const uint& field, const uint& filterCount)
