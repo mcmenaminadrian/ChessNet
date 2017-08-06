@@ -30,10 +30,6 @@ ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 			inputNet));
 	}
 
-	for (uint i = 0; i < filterCount; i++)
-	{
-		cout << "Filter " << i << endl;
-		cout << filters.at(i);
-	}
+	FullyConnected outLayer(filters, filterCount);
 }
 
