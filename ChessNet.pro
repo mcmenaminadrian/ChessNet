@@ -17,14 +17,12 @@ SOURCES += main.cpp\
     chessnet.cpp \
     chessinput.cpp \
     filternet.cpp \
-    leveloneneuron.cpp \
-    innerfilterlayer.cpp
+    leveloneneuron.cpp
 
 HEADERS  += mainwindow.hpp \
     chessnet.hpp \
     chessinput.hpp \
     filternet.hpp \
-    leveloneneuron.hpp \
-    innerfilterlayer.hpp
+    leveloneneuron.hpp
 
 FORMS    += mainwindow.ui

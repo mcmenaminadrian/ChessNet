@@ -5,7 +5,7 @@ class ChessNet
 {
 
 private:
-	std::vector<FilterNet> filtersLevelOne;
+	std::vector<FilterNet> filters;
 
 public:
 	explicit ChessNet(const uint& width, const uint& height,

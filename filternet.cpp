@@ -1,6 +1,7 @@
 #include <vector>
 #include <QMessageBox>
 #include <QApplication>
+#include <cstdlib>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "leveloneneuron.hpp"
@@ -34,7 +35,7 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 			neurons.push_back(neuro);
 		}
 	}
-	uint secondLayerSize = calculateSecondLayerSize(secondLayerSpan,
+	secondLayerSize = calculateSecondLayerSize(secondLayerSpan,
 		netCount);
 	for (uint i = 0; i < secondLayerSize; i++) {
 		for (uint j = 0; j < secondLayerSize; j++) {
@@ -51,13 +52,18 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 			secondNeurons.push_back(neuro);
 		}
 	}
+	//NB only use next line at start up
+	assignRandomWeights(fieldSize, secondLayerField);
 }
 
-void FilterNet::assignFilterWeights(const vector<double>& weights)
+void FilterNet::assignFilterWeights(const vector<double>& weightsTop,
+	const vector<double>& weightsBottom)
 {
-	if (weights.size() != fieldSize * fieldSize) {
+	if (weightsTop.size() != fieldSize * fieldSize ||
+		weightsBottom.size() != secondLayerField * secondLayerField) {
 		QMessageBox messageBox;
-		messageBox.setText("Mismatch of weight vector and filter size.");
+		messageBox.setText(
+			"Mismatch of weight vector and filter size.");
 		messageBox.exec();
 		QApplication::quit();
 	}
@@ -67,19 +73,52 @@ void FilterNet::assignFilterWeights(const vector<double>& weights)
 			uint neuronRow = j * fieldSize;
 			for (uint k = 0; k < fieldSize; k++){
 				(neurons.at(neuronIndex + neuronRow + k)).
-					setWeight(weights.at(neuronRow + k));
+					setWeight(
+					topWeights.at(neuronRow + k));
+			}
+		}
+	}
+	for (uint i = 0; i < secondLayerSize; i++){
+		uint neuronIndex = i * secondLayerField * secondLayerField;
+		for (uint j = 0; j < secondLayerField; j++) {
+			uint neuronRow = j * secondLayerField;
+			for (uint k = 0; k < secondLayerField; k++) {
+				(secondNeurons.at(neuronIndex + neuronRow + k)).
+					setWeight(
+					bottomWeights.at(neuronRow + k));
 			}
 		}
 	}
 }
 
+
+void FilterNet::assignRandomWeights(const uint& firstFieldSize,
+	const uint& secondFieldSize)
+{
+	vector<double> firstLayer;
+	vector<double> secondLayer;
+	double factor = RAND_MAX;
+	for (uint i = 0; i < firstFieldSize * firstFieldSize; i++) {
+		double number = rand();
+		firstLayer.push_back(number/factor);
+	}
+	for (uint i = 0; i < secondFieldSize * secondFieldSize; i++) {
+		double number = rand();
+		secondLayer.push_back(number/factor);
+	}
+	assignFilterWeights(firstLayer, secondLayer);
+}
+
+
 uint FilterNet::calculateSecondLayerSize(const uint& secondSpan,
 	const uint& secondField) const
 {
-	return 1 + (netCount - secondField)/ secondSpan
+	return 1 + (netCount - secondField)/ secondSpan;
 }
 
 uint FilterNet::getNetCount() const
 {
 	return netCount;
 }
+
+
