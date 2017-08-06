@@ -23,6 +23,7 @@ public:
 	void assignFilterWeights(const std::vector<double>& weightsTop,
 		const std::vector<double>& weightsBottom);
 	uint getNetCount() const;
+	std::ostream& streamOutWeights(std::ostream& os) const;
 
 };
 

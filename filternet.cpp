@@ -121,4 +121,19 @@ uint FilterNet::getNetCount() const
 	return netCount;
 }
 
+ostream& FilterNet::streamOutWeights(ostream& os) const
+{
+	for (auto x: topWeights) {
+		os << x;
+		os << " ";
+	}
+	os << endl;
+	for (auto x: bottomWeights) {
+		os << x;
+		os << " ";
+	}
+	os << endl;
+	return os;
+
+}
 

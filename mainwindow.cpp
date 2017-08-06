@@ -2,6 +2,8 @@
 #include <QFileDialog>
 #include <vector>
 #include <cstdint>
+#include <iostream>
+#include <ostream>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "leveloneneuron.hpp"

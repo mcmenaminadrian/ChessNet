@@ -1,5 +1,6 @@
 #include <vector>
 #include <cstdint>
+#include <iostream>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "leveloneneuron.hpp"
@@ -7,6 +8,12 @@
 #include "chessnet.hpp"
 
 using namespace std;
+
+ostream& operator<<(ostream& os, const FilterNet& filter)
+{
+	return filter.streamOutWeights(os);
+}
+
 
 ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 	const uint& field, const uint& filterCount)
