@@ -36,7 +36,7 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 		}
 	}
 	secondLayerSize = calculateSecondLayerSize(secondLayerSpan,
-		netCount);
+		secondLayerField);
 	for (uint i = 0; i < secondLayerSize; i++) {
 		for (uint j = 0; j < secondLayerSize; j++) {
 			HiddenNeuron neuro;
@@ -74,7 +74,7 @@ void FilterNet::assignFilterWeights(const vector<double>& weightsTop,
 			for (uint k = 0; k < fieldSize; k++){
 				(neurons.at(neuronIndex + neuronRow + k)).
 					setWeight(
-					topWeights.at(neuronRow + k));
+					weightsTop.at(neuronRow + k));
 			}
 		}
 	}
@@ -85,7 +85,7 @@ void FilterNet::assignFilterWeights(const vector<double>& weightsTop,
 			for (uint k = 0; k < secondLayerField; k++) {
 				(secondNeurons.at(neuronIndex + neuronRow + k)).
 					setWeight(
-					bottomWeights.at(neuronRow + k));
+					weightsBottom.at(neuronRow + k));
 			}
 		}
 	}
@@ -95,18 +95,17 @@ void FilterNet::assignFilterWeights(const vector<double>& weightsTop,
 void FilterNet::assignRandomWeights(const uint& firstFieldSize,
 	const uint& secondFieldSize)
 {
-	vector<double> firstLayer;
-	vector<double> secondLayer;
+
 	double factor = RAND_MAX;
 	for (uint i = 0; i < firstFieldSize * firstFieldSize; i++) {
 		double number = rand();
-		firstLayer.push_back(number/factor);
+		topWeights.push_back(number/factor);
 	}
 	for (uint i = 0; i < secondFieldSize * secondFieldSize; i++) {
 		double number = rand();
-		secondLayer.push_back(number/factor);
+		bottomWeights.push_back(number/factor);
 	}
-	assignFilterWeights(firstLayer, secondLayer);
+	assignFilterWeights(topWeights, bottomWeights);
 }
 
 

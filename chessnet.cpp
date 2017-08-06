@@ -24,5 +24,11 @@ ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 		filters.push_back(FilterNet(width, height, span, field,
 			inputNet));
 	}
+
+	for (uint i = 0; i < filterCount; i++)
+	{
+		cout << "Filter " << i << endl;
+		cout << filters.at(i);
+	}
 }
 
