@@ -8,6 +8,7 @@
 #include "chessinput.hpp"
 #include "leveloneneuron.hpp"
 #include "filternet.hpp"
+#include "fullyconnected.hpp"
 #include "chessnet.hpp"
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"

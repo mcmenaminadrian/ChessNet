@@ -5,11 +5,12 @@
 class FilterNet
 {
 private:
-	double weight; //single weight per filter
 	std::vector<HiddenNeuron> neurons;
 	std::vector<double> topWeights;
+	std::vector<std::pair<double, double> > firstHiddenActivations;
 	std::vector<HiddenNeuron> secondNeurons;
 	std::vector<double> bottomWeights;
+	std::vector<std::pair<double, double> > secondHiddenActivations;
 	uint netCount;
 	uint secondLayerSize;
 	uint fieldSize;
@@ -17,14 +18,19 @@ private:
 		const uint& secondField) const;
 	void assignRandomWeights(const uint& firstFieldSize,
 		const uint& secondFieldSize);
+	std::pair<double, double> activationFunction(const double& in) const;
 public:
 	FilterNet(const uint& height, const uint& width, const int& field,
-		const uint& span, ChessInput& inputLayer);
+		const uint& span, const ChessInput& inputLayer);
 	void assignFilterWeights(const std::vector<double>& weightsTop,
 		const std::vector<double>& weightsBottom);
 	uint getNetCount() const;
 	std::ostream& streamOutWeights(std::ostream& os) const;
 	std::istream& streamInWeights(std::istream& is);
+	std::pair<uint, uint> getLayerSizes() const;
+	void computeActivations();
+	std::pair<double, double> getSecActivations(const uint& index) const;
+	std::pair<double, double> getFirActivations(const uint& index) const;
 };
 
 #endif // FILTERNET_HPP

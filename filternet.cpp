@@ -13,7 +13,7 @@ static const uint secondLayerSpan = 1;
 static const uint secondLayerField = 3;
 
 FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
-	const uint& field, ChessInput& inputLayer)
+	const uint& field, const ChessInput& inputLayer)
 {
 	//connect number = (width - field)/span + 1
 	//(assuming no padding)
@@ -155,5 +155,22 @@ istream& FilterNet::streamInWeights(istream& is)
 	return is;
 }
 
+pair<uint, uint> FilterNet::getLayerSizes() const
+{
+	return pair<uint, uint>(netCount, secondLayerSize);
+}
 
+void FilterNet::computeActivations()
+{
 
+}
+
+pair<double, double> FilterNet::getSecActivations(const uint &index) const
+{
+	return secondHiddenActivations.at(index);
+}
+
+pair<double, double> FilterNet::getFirActivations(const uint &index) const
+{
+	return firstHiddenActivations.at(index);
+}

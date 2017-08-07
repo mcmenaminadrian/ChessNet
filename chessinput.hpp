@@ -7,7 +7,9 @@ class ChessInput
 
 private:
 	std::vector<std::vector<double> > inputRows;
+	const uint rowLength;
 public:
 	ChessInput(const uint& width, const uint& height);
+	const double& getInput(const uint& index) const;
 };
 #endif // CHESSINPUT_HPP

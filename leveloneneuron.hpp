@@ -4,9 +4,12 @@
 
 class HiddenNeuron
 {
+private:
 	std::vector<uint> connections;
 	double weight;
 	double bias;
+	double sum;
+	double activation;
 public:
 	HiddenNeuron();
 	void addConnection(const uint& number);
@@ -14,6 +17,7 @@ public:
 	double getWeight() const;
 	void setBias(const double& biasIn);
 	double getBias() const;
+	void sumInputs(const ChessInput& in);
 
 };
 
