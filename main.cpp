@@ -1,5 +1,14 @@
+#include <vector>
+#include <iostream>
+#include "sys/types.h"
+#include "chessinput.hpp"
+#include "leveloneneuron.hpp"
+#include "filternet.hpp"
+#include "fullyconnected.hpp"
+#include "chessnet.hpp"
 #include "mainwindow.hpp"
 #include <QApplication>
+
 
 int main(int argc, char *argv[])
 {

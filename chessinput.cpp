@@ -1,5 +1,7 @@
 #include <vector>
 #include <cstdint>
+#include <QImage>
+#include <QRgb>
 #include "sys/types.h"
 #include "chessinput.hpp"
 
@@ -18,5 +20,16 @@ const double& ChessInput::getInput(const uint& index) const
 	uint row = index / rowLength;
 	uint col = index % rowLength;
 	return (inputRows.at(row)).at(col);
+}
+
+void ChessInput::setInput(const QImage& imgIn)
+{
+	for (uint i = 0; i < rowLength; i++) {
+		vector<double> pictureRow = inputRows.at(i);
+		const uchar *scanLine = imgIn.constScanLine(i);
+		for (uint j = 0; j < pictureRow.size(); j++) {
+			pictureRow.at(j) = *(scanLine + j);
+		}
+	}
 }
 

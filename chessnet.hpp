@@ -16,5 +16,6 @@ private:
 public:
 	explicit ChessNet(const uint& width, const uint& height,
 		const uint& span, const uint& field, const uint& filters);
+	void loadInput(const QImage& img);
 };
 #endif // CHESSNET_HPP

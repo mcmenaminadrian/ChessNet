@@ -8,6 +8,7 @@ private:
 	std::vector<std::vector<double> > weights;
 	std::vector<double> sums;
 	std::vector<double> activations;
+	std::vector<double> activationDerivatives;
 	uint multiply;
 	uint secondFilterSize;
 	uint secondLayerNodeCount;
@@ -22,7 +23,8 @@ public:
 	std::istream& streamInWeights(std::istream& is);
 	const std::vector<double>& calculateSums(
 		const std::vector<FilterNet>& filters);
-
+	std::pair<std::vector<double>&, std::vector<double>&>
+		returnActivations();
 };
 
 #endif // FULLYCONNECTED_HPP

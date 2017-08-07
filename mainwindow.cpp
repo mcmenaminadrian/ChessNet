@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
-	ChessNet chess(imageWidth, imageHeight, convSpan, field, filters);
 	ui->setupUi(this);
 	ui->fileName->setVisible(false);
 	ui->progressNN->setVisible(false);
@@ -50,4 +49,7 @@ void MainWindow::on_fileSelect_clicked()
 	ui->progressNN->setVisible(true);
 	ui->progressNN->setEnabled(true);
 	ui->fileSelect->setEnabled(false);
+	//load input
+	ChessNet chess(imageWidth, imageHeight, convSpan, field, filters);
+	QImage inputFile(JPEGName, "JPG");
 }

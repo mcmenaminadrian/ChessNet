@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <iostream>
 #include <algorithm>
+#include <QImage>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "leveloneneuron.hpp"
@@ -13,7 +14,7 @@ using namespace std;
 
 double activationFunction(const double& input)
 {
-	return max(0, input);
+	return max(0.0, input);
 }
 
 double activationDerivative(const double& input)
@@ -21,7 +22,7 @@ double activationDerivative(const double& input)
 	if (input < 0) {
 		return 0.0;
 	} else {
-		return 1.0
+		return 1.0;
 	}
 }
 
@@ -57,13 +58,19 @@ ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 
 	outLayer.setUpVariables(filters, filterCount);
 
-	cout << "WEIGHTS" << endl;
+
+
+/*	cout << "WEIGHTS" << endl;
 	cout << "Hidden layers" << endl;
 	for (auto x: filters) {
 		cout << x;
 		cout << endl;
 	}
 	cout << "Fully connected layer" << endl;
-	cout << outLayer;
+	cout << outLayer; */
 }
 
+void ChessNet::loadInput(const QImage& imgIn)
+{
+	inputNet.setInput(imgIn);
+}

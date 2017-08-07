@@ -6,6 +6,7 @@
 #include "leveloneneuron.hpp"
 #include "filternet.hpp"
 #include "fullyconnected.hpp"
+#include "chessnet.hpp"
 
 
 using namespace std;
@@ -30,13 +31,14 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 	assignRandomWeights();
 }
 
-vector<double>& FullyConnected::calculateSums(const vector<FilterNet>& filters)
+const vector<double>& FullyConnected::calculateSums(
+	const vector<FilterNet>& filters)
 {
 	vector<double>::iterator sumit = sums.begin();
-	for (auto smallWeights: weights) {
-		vector<FilterNet>::iterator it = filters.begin();
+	for (const auto& smallWeights: weights) {
+		auto it = filters.begin();
 		uint i = 0;
-		for (auto individualWeight: smallWeights) {
+		for (const auto& individualWeight: smallWeights) {
 			if (i < secondFilterSize) {
 				*sumit += ((*it).getSecActivations(i)).first *
 					individualWeight;
@@ -47,7 +49,21 @@ vector<double>& FullyConnected::calculateSums(const vector<FilterNet>& filters)
 			}
 		}
 	}
+	return sums;
 }
+
+
+pair<vector<double>&, vector<double>&> FullyConnected::returnActivations()
+{
+	for (const auto& summations: sums) {
+		activations.push_back(activationFunction(summations));
+		activationDerivatives.push_back(
+			activationDerivative(summations));
+	}
+	return pair<vector<double>&, vector<double>&>(
+		activations, activationDerivatives);
+}
+
 
 ostream& FullyConnected::streamOutWeights(ostream& os) const
 {
