@@ -1,5 +1,6 @@
 #include <QString>
 #include <QFileDialog>
+#include <QImage>
 #include <vector>
 #include <cstdint>
 #include <iostream>
@@ -52,4 +53,8 @@ void MainWindow::on_fileSelect_clicked()
 	//load input
 	ChessNet chess(imageWidth, imageHeight, convSpan, field, filters);
 	QImage inputFile(JPEGName, "JPG");
+	chess.loadInput(inputFile);
+	ui->progressNN->setProperty("value", 5);
+	chess.feedForward();
+	ui->progressNN->setProperty("value", 25);
 }

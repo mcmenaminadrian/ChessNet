@@ -160,8 +160,12 @@ pair<uint, uint> FilterNet::getLayerSizes() const
 	return pair<uint, uint>(netCount, secondLayerSize);
 }
 
-void FilterNet::computeActivations()
+void FilterNet::computeActivations(const ChessInput& inNet)
 {
+	for (auto& neuro: neurons) {
+		neuro.sumInputs(inNet);
+		neuro.setActivation();
+	}
 
 }
 

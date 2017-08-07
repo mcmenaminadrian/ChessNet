@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <QImage>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "leveloneneuron.hpp"

@@ -28,7 +28,7 @@ public:
 	std::ostream& streamOutWeights(std::ostream& os) const;
 	std::istream& streamInWeights(std::istream& is);
 	std::pair<uint, uint> getLayerSizes() const;
-	void computeActivations();
+	void computeActivations(const ChessInput& inNet);
 	std::pair<double, double> getSecActivations(const uint& index) const;
 	std::pair<double, double> getFirActivations(const uint& index) const;
 };

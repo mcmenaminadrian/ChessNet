@@ -25,6 +25,7 @@ HEADERS  += mainwindow.hpp \
     chessinput.hpp \
     filternet.hpp \
     leveloneneuron.hpp \
-    fullyconnected.hpp
+    fullyconnected.hpp \
+    activation.hpp
 
 FORMS    += mainwindow.ui

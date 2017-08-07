@@ -12,19 +12,7 @@
 
 using namespace std;
 
-double activationFunction(const double& input)
-{
-	return max(0.0, input);
-}
 
-double activationDerivative(const double& input)
-{
-	if (input < 0) {
-		return 0.0;
-	} else {
-		return 1.0;
-	}
-}
 
 ostream& operator<<(ostream& os, const FilterNet& filter)
 {
@@ -73,4 +61,10 @@ ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 void ChessNet::loadInput(const QImage& imgIn)
 {
 	inputNet.setInput(imgIn);
+}
+
+void ChessNet::feedForward() {
+	for (auto& filter: filters) {
+		filter.computeActivations(inputNet);
+	}
 }

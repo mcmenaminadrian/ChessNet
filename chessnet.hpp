@@ -2,8 +2,8 @@
 #define CHESSNET_HPP
 
 
-double activationDerivative(const double& input);
-double activationFunction(const double& input);
+extern double activationDerivative(const double& input);
+extern double activationFunction(const double& input);
 
 class ChessNet
 {
@@ -17,5 +17,6 @@ public:
 	explicit ChessNet(const uint& width, const uint& height,
 		const uint& span, const uint& field, const uint& filters);
 	void loadInput(const QImage& img);
+	void feedForward();
 };
 #endif // CHESSNET_HPP

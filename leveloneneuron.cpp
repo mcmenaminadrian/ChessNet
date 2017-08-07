@@ -1,5 +1,8 @@
 #include <vector>
+#include <QImage>
 #include <sys/types.h>
+#include <algorithm>
+#include "activation.hpp"
 #include "chessinput.hpp"
 #include "leveloneneuron.hpp"
 
@@ -36,12 +39,19 @@ double HiddenNeuron::getBias() const
 	return bias;
 }
 
-void HiddenNeuron::sumInputs(const ChessInput& input)
+double HiddenNeuron::sumInputs(const ChessInput& input)
 {
 	sum = 0.0;
 	for (auto x: connections) {
 		sum += (input.getInput(x) * weight);
 	}
 	sum += getBias();
+	return sum;
+}
+
+double HiddenNeuron::setActivation()
+{
+	activation = activationFunction(sum);
+	return activation;
 }
 

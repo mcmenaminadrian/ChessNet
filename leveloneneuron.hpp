@@ -17,7 +17,8 @@ public:
 	double getWeight() const;
 	void setBias(const double& biasIn);
 	double getBias() const;
-	void sumInputs(const ChessInput& in);
+	double sumInputs(const ChessInput& in);
+	double setActivation();
 
 };
 
