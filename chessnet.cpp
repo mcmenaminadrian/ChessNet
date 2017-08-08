@@ -56,6 +56,8 @@ void ChessNet::loadInput(const QImage& imgIn)
 }
 
 void ChessNet::feedForward() {
+	vector<double> soughtResult = {1.0, 1,0, 0.0,
+		0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0};
 	for (auto& filter: filters) {
 		filter.computeActivations(inputNet);
 	}
@@ -63,10 +65,25 @@ void ChessNet::feedForward() {
 	pair<vector<double>, vector<double>> actives =
 			outLayer.returnActivations();
 	uint i = 0;
+	vector<double> errors;
+	double totalError = 0.0;
 	for (const auto& answers: actives.first) {
-		cout << "Neuron " << i++ << " returns ";
+		double basicErr = answers - soughtResult.at(i);
+		double sqError = basicErr * basicErr;
+		errors.push_back(sqError);
+		totalError += sqError;
+		cout << "Neuron " << i << " returns ";
 		cout << answers << endl;
+		cout << "Error is " << errors.at(i++) << endl;
 	}
+	cout << "Average Error was " << totalError/i << endl;
+
+	vector<vector<double>> gradients;
+	for (uint i = 0; i < actives.first.size(); i++) {
+		vector<double> singleGrades;
+		for (uint j = 0; j <)
+	}
+
 
 }
 
