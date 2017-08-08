@@ -19,7 +19,7 @@ private:
 public:
 	FullyConnected();
 	void setUpVariables(const std::vector<FilterNet>& filters,
-		const uint& outputClasses);
+		const uint& outputClasses, std::ifstream& weightFile);
 	std::ostream& streamOutWeights(std::ostream& os) const;
 	std::istream& streamInWeights(std::istream& is);
 	const std::vector<double>& calculateSums(

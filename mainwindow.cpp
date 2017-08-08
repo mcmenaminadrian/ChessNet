@@ -22,7 +22,7 @@ static const uint imageWidth = 100;
 static const uint imageHeight = 100;
 static const uint convSpan = 1;
 static const uint field = 3;
-static const uint filters = 9;
+static const uint filters = 11;
 
 
 MainWindow::MainWindow(QWidget *parent) :

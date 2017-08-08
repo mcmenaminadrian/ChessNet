@@ -3,6 +3,7 @@
 #include <iostream>
 #include <QImage>
 #include <sstream>
+#include <fstream>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
@@ -19,19 +20,19 @@ FullyConnected::FullyConnected()
 {
 	//change this to change output neuron number
 	multiply = 1;
-
 }
 
 void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
-	const uint& outputClasses)
+	const uint& outputClasses, std::ifstream& weightFile)
 {
 	classesToMatch = outputClasses;
 	pair<uint, uint> hiddenLayerSizes = (filters.at(0)).getLayerSizes();
 	secondFilterSize = hiddenLayerSizes.second;
 	secondLayerNodeCount = secondFilterSize * filters.size();
 
+	streamInWeights(weightFile);
 	//NB: not to use in production
-	assignRandomWeights();
+	//assignRandomWeights();
 }
 
 const vector<double>& FullyConnected::calculateSums(

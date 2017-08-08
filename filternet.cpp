@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <cstdlib>
+#include <iostream>
 #include <fstream>
 #include "sys/types.h"
 #include "chessinput.hpp"
@@ -53,7 +54,7 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 			secondNeurons.push_back(neuro);
 		}
 	}
-	loadWeights(inFile, fieldSize, secondLayerField);
+	loadWeights(inFile);
 	//NB only use next line at start up
 	//assignRandomWeights(fieldSize, secondLayerField);
 }
@@ -99,8 +100,7 @@ void FilterNet::assignFilterWeights()
 	}
 }
 
-void FilterNet::loadWeights(ifstream& inFile, const uint& firstFieldSize,
-	const uint& secondFieldSize)
+void FilterNet::loadWeights(ifstream& inFile)
 {
 	streamInWeights(inFile);
 }

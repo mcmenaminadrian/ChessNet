@@ -19,8 +19,7 @@ private:
 	void assignRandomWeights(const uint& firstFieldSize,
 		const uint& secondFieldSize);
 	std::pair<double, double> activationFunction(const double& in) const;
-	void loadWeights(std::ifstream& inFile, const uint& firstFieldSize,
-		const uint& secondFieldSize);
+	void loadWeights(std::ifstream& inFile);
 public:
 	FilterNet(const uint& height, const uint& width, const int& field,
 		const uint& span, const ChessInput& inputLayer,
