@@ -68,6 +68,12 @@ void ChessNet::feedForward() {
 		filter.computeActivations(inputNet);
 	}
 	outLayer.calculateSums(filters);
-	outLayer.returnActivations();
+	pair<vector<double>, vector<double>> actives =
+			outLayer.returnActivations();
+	uint i = 0;
+	for (const auto& answers: actives.first) {
+		cout << "Neuron " << i++ << " returns ";
+		cout << answers << endl;
+	}
 
 }

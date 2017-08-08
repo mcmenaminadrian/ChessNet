@@ -35,20 +35,23 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 const vector<double>& FullyConnected::calculateSums(
 	const vector<FilterNet>& filters)
 {
-	vector<double>::iterator sumit = sums.begin();
 	for (const auto& smallWeights: weights) {
 		auto it = filters.begin();
 		uint i = 0;
+		double summation = 0.0;
 		for (const auto& individualWeight: smallWeights) {
 			if (i < secondFilterSize) {
-				*sumit += ((*it).getSecActivations(i)).first *
+				summation +=
+					((*it).getSecActivations(i++)).first *
 					individualWeight;
 			} else {
 				i = 0;
-				*sumit += activationFunction(individualWeight);
+				summation +=
+					activationFunction(individualWeight);
 				it++;
 			}
 		}
+		sums.push_back(summation);
 	}
 	return sums;
 }

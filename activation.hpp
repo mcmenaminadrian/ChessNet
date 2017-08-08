@@ -5,16 +5,13 @@ using namespace std;
 
 double activationFunction(const double& input)
 {
-	return max(0.0, input);
+
+	return input / (1.0 + abs(input));
 }
 
 double activationDerivative(const double& input)
 {
-	if (input < 0) {
-		return 0.0;
-	} else {
-		return 1.0;
-	}
+	return 1.0 / ((1.0 + abs(input)) * (1.0 + abs(input)));
 }
 
 #endif // ACTIVATION
