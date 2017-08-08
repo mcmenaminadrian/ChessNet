@@ -29,6 +29,7 @@ void ChessInput::setInput(const QImage& imgIn)
 		const uchar *scanLine = imgIn.constScanLine(i);
 		for (uint j = 0; j < pictureRow.size(); j++) {
 			pictureRow.at(j) = *(scanLine + j);
+			pictureRow.at(j) /= 20000;
 		}
 	}
 }

@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <iostream>
 #include <ostream>
+#include <fstream>
+#include <sstream>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
@@ -51,10 +53,19 @@ void MainWindow::on_fileSelect_clicked()
 	ui->progressNN->setEnabled(true);
 	ui->fileSelect->setEnabled(false);
 	//load input
-	ChessNet chess(imageWidth, imageHeight, convSpan, field, filters);
+	ifstream weightsFile;
+	weightsFile.open("weights.txt");
+	ChessNet chess(imageWidth, imageHeight, convSpan, field, filters,
+		weightsFile);
 	QImage inputFile(JPEGName, "JPG");
 	chess.loadInput(inputFile);
 	ui->progressNN->setProperty("value", 5);
 	chess.feedForward();
 	ui->progressNN->setProperty("value", 25);
+	chess.storeWeights();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+   QApplication::exit();
 }

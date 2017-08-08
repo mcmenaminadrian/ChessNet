@@ -18,7 +18,8 @@ public:
 
 private slots:
 	void on_fileSelect_clicked();
-
+	void on_pushButton_clicked();
+	
 private:
 	Ui::MainWindow *ui;
 };

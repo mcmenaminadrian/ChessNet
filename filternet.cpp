@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <cstdlib>
+#include <fstream>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
@@ -13,7 +14,7 @@ static const uint secondLayerSpan = 1;
 static const uint secondLayerField = 3;
 
 FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
-	const uint& field, const ChessInput& inputLayer)
+	const uint& field, const ChessInput& inputLayer, std::ifstream& inFile)
 {
 	//connect number = (width - field)/span + 1
 	//(assuming no padding)
@@ -52,14 +53,16 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 			secondNeurons.push_back(neuro);
 		}
 	}
+	loadWeights(inFile, fieldSize, secondLayerField);
 	//NB only use next line at start up
-	assignRandomWeights(fieldSize, secondLayerField);
+	//assignRandomWeights(fieldSize, secondLayerField);
 }
 
 void FilterNet::assignFilterWeights()
 {
-	if (topWeights.size() != fieldSize * fieldSize ||
-		bottomWeights.size() != secondLayerField * secondLayerField) {
+	if (topWeights.size() != 1 + fieldSize * fieldSize ||
+		bottomWeights.size() !=
+		1 + secondLayerField * secondLayerField) {
 		QMessageBox messageBox;
 		messageBox.setText(
 			"Mismatch of weight vector and filter size.");
@@ -77,6 +80,9 @@ void FilterNet::assignFilterWeights()
 			}
 		}
 	}
+	for (auto& neuro: neurons) {
+		neuro.setFilterBias(topWeights.back());
+	}
 	for (uint i = 0; i < secondLayerSize; i++){
 		uint neuronIndex = i * secondLayerField * secondLayerField;
 		for (uint j = 0; j < secondLayerField; j++) {
@@ -88,8 +94,16 @@ void FilterNet::assignFilterWeights()
 			}
 		}
 	}
+	for (auto& neuro: secondNeurons) {
+		neuro.setFilterBias(bottomWeights.back());
+	}
 }
 
+void FilterNet::loadWeights(ifstream& inFile, const uint& firstFieldSize,
+	const uint& secondFieldSize)
+{
+	streamInWeights(inFile);
+}
 
 void FilterNet::assignRandomWeights(const uint& firstFieldSize,
 	const uint& secondFieldSize)
@@ -100,10 +114,17 @@ void FilterNet::assignRandomWeights(const uint& firstFieldSize,
 		double number = rand();
 		topWeights.push_back(number/factor);
 	}
+
+	//bias
+	double randomBias = rand();
+	randomBias /= factor;
+	topWeights.push_back(randomBias);
+
 	for (uint i = 0; i < secondFieldSize * secondFieldSize; i++) {
 		double number = rand();
 		bottomWeights.push_back(number/factor);
 	}
+	bottomWeights.push_back(randomBias);
 	assignFilterWeights();
 }
 
@@ -138,14 +159,14 @@ ostream& FilterNet::streamOutWeights(ostream& os) const
 istream& FilterNet::streamInWeights(istream& is)
 {
 	topWeights.clear();
-	for (uint i = 0; i < fieldSize * fieldSize; i++)
+	for (uint i = 0; i <= fieldSize * fieldSize; i++)
 	{
 		double x;
 		is >> x;
 		topWeights.push_back(x);
 	}
 	bottomWeights.clear();
-	for (uint i = 0; i < secondLayerField * secondLayerField; i++)
+	for (uint i = 0; i <= secondLayerField * secondLayerField; i++)
 	{
 		double x;
 		is >> x;

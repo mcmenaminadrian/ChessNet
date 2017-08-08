@@ -2,12 +2,14 @@
 #include <cstdint>
 #include <iostream>
 #include <QImage>
+#include <sstream>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
 #include "filternet.hpp"
 #include "fullyconnected.hpp"
 #include "chessnet.hpp"
+#include "activation.hpp"
 
 
 using namespace std;
@@ -35,6 +37,7 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 const vector<double>& FullyConnected::calculateSums(
 	const vector<FilterNet>& filters)
 {
+	auto biasIndex = bias.begin();
 	for (const auto& smallWeights: weights) {
 		auto it = filters.begin();
 		uint i = 0;
@@ -47,7 +50,7 @@ const vector<double>& FullyConnected::calculateSums(
 			} else {
 				i = 0;
 				summation +=
-					activationFunction(individualWeight);
+					activationFunction(*biasIndex++);
 				it++;
 			}
 		}
@@ -76,7 +79,11 @@ ostream& FullyConnected::streamOutWeights(ostream& os) const
 			os << y;
 			os << " ";
 		}
-		os << endl;
+	}
+	os << endl;
+	for (auto x: bias) {
+		os << x;
+		os << " ";
 	}
 	os << endl;
 	return os;
@@ -87,13 +94,17 @@ istream& FullyConnected::streamInWeights(istream& is)
 	weights.clear();
 	for (uint i = 0; i < classesToMatch * multiply; i++) {
 		vector<double> smallWeights;
-		//loop boundary reflects bias
-		for (uint j = 0; j <= secondLayerNodeCount; j++) {
+		for (uint j = 0; j < secondLayerNodeCount; j++) {
 			double x;
 			is >> x;
 			smallWeights.push_back(x);
 		}
 		weights.push_back(smallWeights);
+	}
+	for (uint i = 0; i < classesToMatch * multiply; i++) {
+		double x;
+		is >> x;
+		bias.push_back(x);
 	}
 	return is;
 }
@@ -104,10 +115,12 @@ void FullyConnected::assignRandomWeights()
 	double factor = RAND_MAX;
 	for (uint i = 0; i < classesToMatch * multiply; i++) {
 		vector<double> smallWeights;
-		for (uint j = 0; j <= secondLayerNodeCount; j++) {
+		for (uint j = 0; j < secondLayerNodeCount; j++) {
 			double x = rand();
 			smallWeights.push_back(x/factor);
 		}
+		double x = rand();
+		bias.push_back(x / factor);
 		weights.push_back(smallWeights);
 	}
 }

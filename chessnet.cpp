@@ -1,8 +1,10 @@
 #include <vector>
 #include <cstdint>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <QImage>
+#include <sstream>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
@@ -36,26 +38,16 @@ istream& operator>>(istream& is, FullyConnected& fc)
 
 
 ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
-	const uint& field, const uint& filterCount): inputNet(width, height)
+	const uint& field, const uint& filterCount, ifstream& weightsIn):
+	inputNet(width, height)
 {
 
 	for (uint i = 0; i < filterCount; i++) {
 		filters.push_back(FilterNet(width, height, span, field,
-			inputNet));
+			inputNet, weightsIn));
 	}
 
 	outLayer.setUpVariables(filters, filterCount);
-
-
-
-/*	cout << "WEIGHTS" << endl;
-	cout << "Hidden layers" << endl;
-	for (auto x: filters) {
-		cout << x;
-		cout << endl;
-	}
-	cout << "Fully connected layer" << endl;
-	cout << outLayer; */
 }
 
 void ChessNet::loadInput(const QImage& imgIn)
@@ -76,4 +68,20 @@ void ChessNet::feedForward() {
 		cout << answers << endl;
 	}
 
+}
+
+void ChessNet::storeWeights()
+{
+	for (auto x: filters) {
+		allWeights << x;
+	}
+	allWeights << outLayer;
+}
+
+ChessNet::~ChessNet()
+{
+	ofstream weightsFile;
+	weightsFile.open("weights.txt");
+	weightsFile << allWeights.str();
+	weightsFile.close();
 }

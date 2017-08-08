@@ -9,6 +9,7 @@ private:
 	std::vector<double> sums;
 	std::vector<double> activations;
 	std::vector<double> activationDerivatives;
+	std::vector<double> bias;
 	uint multiply;
 	uint secondFilterSize;
 	uint secondLayerNodeCount;
