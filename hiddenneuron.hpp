@@ -1,6 +1,7 @@
 #ifndef LEVELONENEURON_HPP
 #define LEVELONENEURON_HPP
 
+class FilterNet;
 
 class HiddenNeuron
 {
@@ -18,6 +19,7 @@ public:
 	void setBias(const double& biasIn);
 	double getBias() const;
 	double sumInputs(const ChessInput& in);
+	double sumSecondLayer(FilterNet* fn);
 	std::pair<double, double> setActivation();
 
 };

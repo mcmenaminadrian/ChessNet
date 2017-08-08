@@ -5,7 +5,7 @@
 #include "activation.hpp"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
-
+#include "filternet.hpp"
 
 using namespace std;
 
@@ -44,6 +44,16 @@ double HiddenNeuron::sumInputs(const ChessInput& input)
 	sum = 0.0;
 	for (auto x: connections) {
 		sum += (input.getInput(x) * weight);
+	}
+	sum += getBias();
+	return sum;
+}
+
+double HiddenNeuron::sumSecondLayer(FilterNet* ptrFN)
+{
+	sum = 0.0;
+	for (auto x: connections) {
+		sum += ptrFN->getFirActivations(x).first * weight;
 	}
 	sum += getBias();
 	return sum;

@@ -151,6 +151,7 @@ istream& FilterNet::streamInWeights(istream& is)
 		is >> x;
 		bottomWeights.push_back(x);
 	}
+	assignFilterWeights();
 	return is;
 }
 
@@ -166,7 +167,8 @@ void FilterNet::computeActivations(const ChessInput& inNet)
 		firstHiddenActivations.push_back(neuro.setActivation());
 	}
 	for (auto& neuro: secondNeurons) {
-
+		neuro.sumSecondLayer(this);
+		secondHiddenActivations.push_back(neuro.setActivation());
 	}
 
 }

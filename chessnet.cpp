@@ -64,9 +64,10 @@ void ChessNet::loadInput(const QImage& imgIn)
 }
 
 void ChessNet::feedForward() {
-	uint i = 0;
 	for (auto& filter: filters) {
 		filter.computeActivations(inputNet);
-		cout << "Computed" << i++ << endl;
 	}
+	outLayer.calculateSums(filters);
+	outLayer.returnActivations();
+
 }
