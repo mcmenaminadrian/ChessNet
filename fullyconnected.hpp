@@ -12,8 +12,8 @@ private:
 	std::vector<double> bias;
 	uint multiply;
 	uint secondFilterSize;
-	uint secondLayerNodeCount;
 	uint classesToMatch;
+	uint secondLayerNodeCount;
 	void assignRandomWeights();
 
 public:
@@ -26,6 +26,9 @@ public:
 		const std::vector<FilterNet>& filters);
 	std::pair<std::vector<double>&, std::vector<double>&>
 		returnActivations();
+	std::vector<double> errGrads(const uint& index, const double& error)
+		const;
+
 };
 
 #endif // FULLYCONNECTED_HPP

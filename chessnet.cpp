@@ -80,8 +80,8 @@ void ChessNet::feedForward() {
 
 	vector<vector<double>> gradients;
 	for (uint i = 0; i < actives.first.size(); i++) {
-		vector<double> singleGrades;
-		for (uint j = 0; j <)
+		gradients.push_back(outLayer.errGrads(i, errors.at(i)));
+
 	}
 
 

@@ -125,3 +125,12 @@ void FullyConnected::assignRandomWeights()
 		weights.push_back(smallWeights);
 	}
 }
+
+vector<double> FullyConnected::errGrads(const uint &index, const double &error) const
+{
+	vector<double> gradients;
+	for (uint i = 0; i < secondLayerNodeCount; i++) {
+		gradients.push_back(-2 * error * activationDerivatives.at(index *
+			));
+	}
+}
