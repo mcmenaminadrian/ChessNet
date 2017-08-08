@@ -9,7 +9,7 @@ private:
 	double weight;
 	double bias;
 	double sum;
-	double activation;
+	std::pair<double, double> activation;
 public:
 	HiddenNeuron();
 	void addConnection(const uint& number);
@@ -18,7 +18,7 @@ public:
 	void setBias(const double& biasIn);
 	double getBias() const;
 	double sumInputs(const ChessInput& in);
-	double setActivation();
+	std::pair<double, double> setActivation();
 
 };
 

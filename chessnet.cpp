@@ -5,7 +5,7 @@
 #include <QImage>
 #include "sys/types.h"
 #include "chessinput.hpp"
-#include "leveloneneuron.hpp"
+#include "hiddenneuron.hpp"
 #include "filternet.hpp"
 #include "fullyconnected.hpp"
 #include "chessnet.hpp"
@@ -64,7 +64,9 @@ void ChessNet::loadInput(const QImage& imgIn)
 }
 
 void ChessNet::feedForward() {
+	uint i = 0;
 	for (auto& filter: filters) {
 		filter.computeActivations(inputNet);
+		cout << "Computed" << i++ << endl;
 	}
 }

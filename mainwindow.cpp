@@ -7,7 +7,7 @@
 #include <ostream>
 #include "sys/types.h"
 #include "chessinput.hpp"
-#include "leveloneneuron.hpp"
+#include "hiddenneuron.hpp"
 #include "filternet.hpp"
 #include "fullyconnected.hpp"
 #include "chessnet.hpp"

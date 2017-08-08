@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "activation.hpp"
 #include "chessinput.hpp"
-#include "leveloneneuron.hpp"
+#include "hiddenneuron.hpp"
 
 
 using namespace std;
@@ -49,9 +49,10 @@ double HiddenNeuron::sumInputs(const ChessInput& input)
 	return sum;
 }
 
-double HiddenNeuron::setActivation()
+pair<double, double> HiddenNeuron::setActivation()
 {
-	activation = activationFunction(sum);
+	activation = pair<double, double>(activationFunction(sum),
+		activationDerivative(sum));
 	return activation;
 }
 

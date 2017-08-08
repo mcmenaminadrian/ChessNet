@@ -22,8 +22,7 @@ private:
 public:
 	FilterNet(const uint& height, const uint& width, const int& field,
 		const uint& span, const ChessInput& inputLayer);
-	void assignFilterWeights(const std::vector<double>& weightsTop,
-		const std::vector<double>& weightsBottom);
+	void assignFilterWeights();
 	uint getNetCount() const;
 	std::ostream& streamOutWeights(std::ostream& os) const;
 	std::istream& streamInWeights(std::istream& is);

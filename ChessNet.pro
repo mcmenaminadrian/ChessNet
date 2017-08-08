@@ -17,15 +17,15 @@ SOURCES += main.cpp\
     chessnet.cpp \
     chessinput.cpp \
     filternet.cpp \
-    leveloneneuron.cpp \
-    fullyconnected.cpp
+    fullyconnected.cpp \
+    hiddenneuron.cpp
 
 HEADERS  += mainwindow.hpp \
     chessnet.hpp \
     chessinput.hpp \
     filternet.hpp \
-    leveloneneuron.hpp \
     fullyconnected.hpp \
-    activation.hpp
+    activation.hpp \
+    hiddenneuron.hpp
 
 FORMS    += mainwindow.ui

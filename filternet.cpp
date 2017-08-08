@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include "sys/types.h"
 #include "chessinput.hpp"
-#include "leveloneneuron.hpp"
+#include "hiddenneuron.hpp"
 #include "filternet.hpp"
 
 using namespace std;
@@ -56,11 +56,10 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 	assignRandomWeights(fieldSize, secondLayerField);
 }
 
-void FilterNet::assignFilterWeights(const vector<double>& weightsTop,
-	const vector<double>& weightsBottom)
+void FilterNet::assignFilterWeights()
 {
-	if (weightsTop.size() != fieldSize * fieldSize ||
-		weightsBottom.size() != secondLayerField * secondLayerField) {
+	if (topWeights.size() != fieldSize * fieldSize ||
+		bottomWeights.size() != secondLayerField * secondLayerField) {
 		QMessageBox messageBox;
 		messageBox.setText(
 			"Mismatch of weight vector and filter size.");
@@ -74,7 +73,7 @@ void FilterNet::assignFilterWeights(const vector<double>& weightsTop,
 			for (uint k = 0; k < fieldSize; k++){
 				(neurons.at(neuronIndex + neuronRow + k)).
 					setWeight(
-					weightsTop.at(neuronRow + k));
+					topWeights.at(neuronRow + k));
 			}
 		}
 	}
@@ -85,7 +84,7 @@ void FilterNet::assignFilterWeights(const vector<double>& weightsTop,
 			for (uint k = 0; k < secondLayerField; k++) {
 				(secondNeurons.at(neuronIndex + neuronRow + k)).
 					setWeight(
-					weightsBottom.at(neuronRow + k));
+					bottomWeights.at(neuronRow + k));
 			}
 		}
 	}
@@ -105,7 +104,7 @@ void FilterNet::assignRandomWeights(const uint& firstFieldSize,
 		double number = rand();
 		bottomWeights.push_back(number/factor);
 	}
-	assignFilterWeights(topWeights, bottomWeights);
+	assignFilterWeights();
 }
 
 
@@ -164,7 +163,10 @@ void FilterNet::computeActivations(const ChessInput& inNet)
 {
 	for (auto& neuro: neurons) {
 		neuro.sumInputs(inNet);
-		neuro.setActivation();
+		firstHiddenActivations.push_back(neuro.setActivation());
+	}
+	for (auto& neuro: secondNeurons) {
+
 	}
 
 }
