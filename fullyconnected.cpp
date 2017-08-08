@@ -18,7 +18,7 @@ using namespace std;
 FullyConnected::FullyConnected()
 {
 	//change this to change output neuron number
-	multiply = 2;
+	multiply = 1;
 
 }
 
