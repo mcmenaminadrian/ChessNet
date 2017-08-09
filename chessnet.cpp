@@ -66,9 +66,13 @@ void ChessNet::feedForward() {
 			outLayer.returnActivations();
 	uint i = 0;
 	vector<double> errors;
+	vector<double> basicErrors;
+	vector<vector<double>> gradients;
+
 	double totalError = 0.0;
 	for (const auto& answers: actives.first) {
 		double basicErr = answers - soughtResult.at(i);
+		basicErrors.push_back(basicErr);
 		double sqError = basicErr * basicErr;
 		errors.push_back(sqError);
 		totalError += sqError;
@@ -77,13 +81,10 @@ void ChessNet::feedForward() {
 		cout << "Error is " << errors.at(i++) << endl;
 	}
 	cout << "Average Error was " << totalError/i << endl;
-
-	vector<vector<double>> gradients;
-	for (uint i = 0; i < actives.first.size(); i++) {
-		gradients.push_back(outLayer.errGrads(i, errors.at(i)));
-
+	vector<double>::iterator it = basicErrors.begin();
+	for (const auto& derivs: actives.second) {
+		gradients.push_back(outLayer.errGrads(filters, *it++, derivs));
 	}
-
 
 }
 

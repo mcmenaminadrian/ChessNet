@@ -176,9 +176,9 @@ istream& FilterNet::streamInWeights(istream& is)
 	return is;
 }
 
-pair<uint, uint> FilterNet::getLayerSizes() const
+pair<const uint, const uint> FilterNet::getLayerSizes() const
 {
-	return pair<uint, uint>(netCount, secondLayerSize);
+	return pair<const uint, const uint>(netCount, secondLayerSize);
 }
 
 void FilterNet::computeActivations(const ChessInput& inNet)

@@ -26,8 +26,8 @@ public:
 		const std::vector<FilterNet>& filters);
 	std::pair<std::vector<double>&, std::vector<double>&>
 		returnActivations();
-	std::vector<double> errGrads(const uint& index, const double& error)
-		const;
+	std::vector<double> errGrads(const std::vector<FilterNet>& filters,
+		const double& error, const double& deriv) const;
 
 };
 
