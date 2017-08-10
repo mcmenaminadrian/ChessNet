@@ -127,7 +127,7 @@ void FullyConnected::assignRandomWeights()
 }
 
 vector<double> FullyConnected::errGrads(const vector<FilterNet>& filters,
-	const double& error, const double& deriv) const
+	const double& error, const double& deriv, const uint& index) const
 {
 	vector<double> gradients;
 	const double errorFactor = -2 * error;
@@ -138,5 +138,20 @@ vector<double> FullyConnected::errGrads(const vector<FilterNet>& filters,
 			gradients.push_back(errorFactor * answer.first * deriv);
 		}
 	}
+	gradients.push_back(errorFactor * bias.at(index) * deriv);
 	return gradients;
+}
+
+void FullyConnected::tryCorrections(const double &factor,
+	const vector<vector<double>> &gradients)
+{
+	uint index = 0;
+	for (auto& weightVector: weights) {
+		const vector<double>& filterGrads = gradients.at(index);
+		uint jindex = 0;
+		for (auto& weight: weightVector) {
+			weight -= factor * filterGrads.at(jindex++);
+		}
+		bias.at(index++) -= factor * filterGrads.at(jindex);
+	}
 }

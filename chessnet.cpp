@@ -56,8 +56,9 @@ void ChessNet::loadInput(const QImage& imgIn)
 }
 
 void ChessNet::feedForward() {
-	vector<double> soughtResult = {1.0, 1,0, 0.0,
-		0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0};
+	vector<double> soughtResult = {0.99, 0.99, 0.01,
+		0.01, 0.01, 0.99, 0.01, 0.01, 0.01, 0.99, 0.01};
+//	vector<double> soughtResult = {0.99, 0.01, 0.99, 0.99, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.99};
 	for (auto& filter: filters) {
 		filter.computeActivations(inputNet);
 	}
@@ -71,7 +72,7 @@ void ChessNet::feedForward() {
 
 	double totalError = 0.0;
 	for (const auto& answers: actives.first) {
-		double basicErr = answers - soughtResult.at(i);
+		double basicErr = soughtResult.at(i) - answers;
 		basicErrors.push_back(basicErr);
 		double sqError = basicErr * basicErr;
 		errors.push_back(sqError);
@@ -82,9 +83,12 @@ void ChessNet::feedForward() {
 	}
 	cout << "Average Error was " << totalError/i << endl;
 	vector<double>::iterator it = basicErrors.begin();
+	i = 0;
 	for (const auto& derivs: actives.second) {
-		gradients.push_back(outLayer.errGrads(filters, *it++, derivs));
+		gradients.push_back(outLayer.errGrads(filters, *it++, derivs,
+		i++));
 	}
+	outLayer.tryCorrections(1.0, gradients);
 
 }
 
