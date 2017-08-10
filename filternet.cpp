@@ -70,31 +70,30 @@ void FilterNet::assignFilterWeights()
 		messageBox.exec();
 		QApplication::quit();
 	}
-	for (uint i = 0; i < netCount; i++) {
-		uint neuronIndex = i * fieldSize * fieldSize;
-		for (uint j = 0; j < fieldSize; j++) {
-			uint neuronRow = j * fieldSize;
-			for (uint k = 0; k < fieldSize; k++){
-				(neurons.at(neuronIndex + neuronRow + k)).
-					setWeight(
-					topWeights.at(neuronRow + k));
-			}
+
+	for (uint i = 0; i < netCount; i++) { //row
+		for (uint j = 0; j < netCount; j++) { //column
+			neurons.at(i * netCount + j).setWeight(
+				topWeights.at(
+				(i % fieldSize) * fieldSize) +
+				(j % fieldSize) * fieldSize);
 		}
 	}
+
 	for (auto& neuro: neurons) {
 		neuro.setFilterBias(topWeights.back());
 	}
-	for (uint i = 0; i < secondLayerSize; i++){
-		uint neuronIndex = i * secondLayerField * secondLayerField;
-		for (uint j = 0; j < secondLayerField; j++) {
-			uint neuronRow = j * secondLayerField;
-			for (uint k = 0; k < secondLayerField; k++) {
-				(secondNeurons.at(neuronIndex + neuronRow + k)).
-					setWeight(
-					bottomWeights.at(neuronRow + k));
-			}
+
+	for (uint i = 0; i < secondLayerSize; i++) { //row
+		for (uint j = 0; j < secondLayerSize; j++) { //column
+			neurons.at(i * secondLayerSize + j).setWeight(
+				topWeights.at(
+				(i % secondLayerField) * secondLayerField) +
+				(j % secondLayerField) * secondLayerField);
 		}
 	}
+
+
 	for (auto& neuro: secondNeurons) {
 		neuro.setFilterBias(bottomWeights.back());
 	}
