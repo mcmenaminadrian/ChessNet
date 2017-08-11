@@ -6,10 +6,8 @@ class FilterNet
 {
 private:
 	std::vector<HiddenNeuron> neurons;
-	std::vector<double> topWeights; //last of these is bias
 	std::vector<std::pair<double, double> > firstHiddenActivations;
 	std::vector<HiddenNeuron> secondNeurons;
-	std::vector<double> bottomWeights; //last of these is bias
 	std::vector<std::pair<double, double> > secondHiddenActivations;
 	uint netCount;
 	uint secondLayerSize;
@@ -21,6 +19,8 @@ private:
 	std::pair<double, double> activationFunction(const double& in) const;
 	void loadWeights(std::ifstream& inFile);
 public:
+	std::vector<double> topWeights; //last of these is bias
+	std::vector<double> bottomWeights; //last of these is bias
 	FilterNet(const uint& height, const uint& width, const int& field,
 		const uint& span, const ChessInput& inputLayer,
 		std::ifstream& inFile);

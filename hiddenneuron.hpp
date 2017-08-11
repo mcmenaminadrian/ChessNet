@@ -7,22 +7,16 @@ class HiddenNeuron
 {
 private:
 	std::vector<uint> connections;
-	double weight;
 	double sum;
 	std::pair<double, double> activation;
-	double filterBias;
 	const uint fieldSize;
 	const FilterNet *ptrFN;
 public:
 	HiddenNeuron(const uint& field, const FilterNet* FN);
 	void addConnection(const uint& number);
-	void setWeight(const double& weightIn);
-	double getWeight() const;
 	double sumInputs(const ChessInput& in);
-	double sumSecondLayer(FilterNet* fn);
+	double sumSecondLayer();
 	std::pair<double, double> setActivation();
-	void setFilterBias(const double& fB){filterBias = fB;}
-
 };
 
 #endif // LEVELONENEURON_HPP

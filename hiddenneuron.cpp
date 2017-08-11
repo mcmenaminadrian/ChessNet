@@ -9,7 +9,8 @@
 
 using namespace std;
 
-HiddenNeuron::HiddenNeuron(const uint& field, FilterNet* FN):fieldSize(field), ptrFN(FN)
+HiddenNeuron::HiddenNeuron(const uint& field, FilterNet* FN):
+	fieldSize(field), ptrFN(FN)
 {
 
 }
@@ -22,20 +23,24 @@ void HiddenNeuron::addConnection(const uint &number)
 double HiddenNeuron::sumInputs(const ChessInput& input)
 {
 	sum = 0.0;
+	vector<double>::iterator it = ptrFN->topWeights.begin();
 	for (auto x: connections) {
-		sum += (input.getInput(x) * weight);
+		double rawNumber = input.getInput(x);
+		rawNumber *= *it++;
+		sum += rawNumber;
 	}
-	sum += filterBias;
 	return sum;
 }
 
-double HiddenNeuron::sumSecondLayer(FilterNet* ptrFN)
+double HiddenNeuron::sumSecondLayer()
 {
 	sum = 0.0;
+	vector<double>::iterator it = bottomWeights.begin();
 	for (auto x: connections) {
-		sum += ptrFN->getFirActivations(x).first * weight;
+		double rawNumber = ptrFN->getFirActivations();
+		rawNumber *= *it++;
+		sum += rawNumber;
 	}
-	sum += filterBias;
 	return sum;
 }
 
