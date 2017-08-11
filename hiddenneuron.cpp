@@ -19,16 +19,6 @@ void HiddenNeuron::addConnection(const uint &number)
 	connections.push_back(number);
 }
 
-void HiddenNeuron::setWeight(const double& weightIn)
-{
-	weight = weightIn;
-}
-
-double HiddenNeuron::getWeight() const
-{
-	return weight;
-}
-
 double HiddenNeuron::sumInputs(const ChessInput& input)
 {
 	sum = 0.0;

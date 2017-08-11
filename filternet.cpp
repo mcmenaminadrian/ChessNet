@@ -24,7 +24,7 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 	for (uint i = 0; i < netCount; i++) {
 		for (uint j = 0; j < netCount; j++) {
 			//row by row construct and connect level one neurons
-			HiddenNeuron neuro;
+			HiddenNeuron neuro(fieldSize, this);
 			uint rowIndex = i * width;
 			uint jAdvance = j * span;
 			for (uint k = 0; k < field; k++) {
@@ -41,7 +41,7 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 		secondLayerField);
 	for (uint i = 0; i < secondLayerSize; i++) {
 		for (uint j = 0; j < secondLayerSize; j++) {
-			HiddenNeuron neuro;
+			HiddenNeuron neuro(fieldSize, this);
 			uint rowIndex = i * netCount;
 			uint jAdvance = j * secondLayerSpan;
 			for (uint k = 0; k < secondLayerField; k++) {
@@ -59,7 +59,7 @@ FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
 	//assignRandomWeights(fieldSize, secondLayerField);
 }
 
-void FilterNet::assignFilterWeights()
+void FilterNet::checkFilterWeights()
 {
 	if (topWeights.size() != 1 + fieldSize * fieldSize ||
 		bottomWeights.size() !=
@@ -71,32 +71,6 @@ void FilterNet::assignFilterWeights()
 		QApplication::quit();
 	}
 
-	for (uint i = 0; i < netCount; i++) { //row
-		for (uint j = 0; j < netCount; j++) { //column
-			neurons.at(i * netCount + j).setWeight(
-				topWeights.at(
-				(i % fieldSize) * fieldSize) +
-				(j % fieldSize) * fieldSize);
-		}
-	}
-
-	for (auto& neuro: neurons) {
-		neuro.setFilterBias(topWeights.back());
-	}
-
-	for (uint i = 0; i < secondLayerSize; i++) { //row
-		for (uint j = 0; j < secondLayerSize; j++) { //column
-			neurons.at(i * secondLayerSize + j).setWeight(
-				topWeights.at(
-				(i % secondLayerField) * secondLayerField) +
-				(j % secondLayerField) * secondLayerField);
-		}
-	}
-
-
-	for (auto& neuro: secondNeurons) {
-		neuro.setFilterBias(bottomWeights.back());
-	}
 }
 
 void FilterNet::loadWeights(ifstream& inFile)
@@ -124,7 +98,7 @@ void FilterNet::assignRandomWeights(const uint& firstFieldSize,
 		bottomWeights.push_back(number/factor);
 	}
 	bottomWeights.push_back(randomBias);
-	assignFilterWeights();
+	checkFilterWeights();
 }
 
 
@@ -171,7 +145,7 @@ istream& FilterNet::streamInWeights(istream& is)
 		is >> x;
 		bottomWeights.push_back(x);
 	}
-	assignFilterWeights();
+	checkFilterWeights();
 	return is;
 }
 
