@@ -9,7 +9,7 @@
 
 using namespace std;
 
-HiddenNeuron::HiddenNeuron()
+HiddenNeuron::HiddenNeuron(const uint& field, FilterNet* FN):fieldSize(field), ptrFN(FN)
 {
 
 }

@@ -11,8 +11,10 @@ private:
 	double sum;
 	std::pair<double, double> activation;
 	double filterBias;
+	const uint fieldSize;
+	const FilterNet *ptrFN;
 public:
-	HiddenNeuron();
+	HiddenNeuron(const uint& field, const FilterNet* FN);
 	void addConnection(const uint& number);
 	void setWeight(const double& weightIn);
 	double getWeight() const;
