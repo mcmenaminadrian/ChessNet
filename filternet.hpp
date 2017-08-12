@@ -21,9 +21,8 @@ private:
 public:
 	std::vector<double> topWeights; //last of these is bias
 	std::vector<double> bottomWeights; //last of these is bias
-	FilterNet(const uint& height, const uint& width, const int& field,
-		const uint& span, const ChessInput& inputLayer,
-		std::ifstream& inFile);
+	FilterNet(const uint& width, const int& field,
+		const uint& span, std::ifstream& inFile);
 	void checkFilterWeights();
 	uint getNetCount() const;
 	std::ostream& streamOutWeights(std::ostream& os) const;

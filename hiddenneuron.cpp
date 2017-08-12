@@ -29,20 +29,20 @@ double HiddenNeuron::sumInputs(const ChessInput& input)
 		rawNumber *= *it++;
 		sum += rawNumber;
 	}
-	sum += topWeights(*it);
+	sum += *it;
 	return sum;
 }
 
 double HiddenNeuron::sumSecondLayer()
 {
 	sum = 0.0;
-	vector<double>::iterator it = bottomWeights.begin();
+	vector<double>::iterator it = ptrFN->bottomWeights.begin();
 	for (auto x: connections) {
-		double rawNumber = ptrFN->getFirActivations();
+		double rawNumber = ptrFN->getFirActivations(x).first;
 		rawNumber *= *it++;
 		sum += rawNumber;
 	}
-	sum += bottomWeights(*it);
+	sum += *it;
 	return sum;
 }
 

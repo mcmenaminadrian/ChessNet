@@ -10,9 +10,9 @@ private:
 	double sum;
 	std::pair<double, double> activation;
 	const uint fieldSize;
-	const FilterNet *ptrFN;
+	FilterNet *ptrFN;
 public:
-	HiddenNeuron(const uint& field, const FilterNet* FN);
+	HiddenNeuron(const uint& field, FilterNet* FN);
 	void addConnection(const uint& number);
 	double sumInputs(const ChessInput& in);
 	double sumSecondLayer();

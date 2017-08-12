@@ -43,8 +43,7 @@ ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 {
 
 	for (uint i = 0; i < filterCount; i++) {
-		filters.push_back(FilterNet(width, height, span, field,
-			inputNet, weightsIn));
+		filters.push_back(FilterNet(width, span, field, weightsIn));
 	}
 
 	outLayer.setUpVariables(filters, filterCount, weightsIn);

@@ -14,8 +14,8 @@ using namespace std;
 static const uint secondLayerSpan = 1;
 static const uint secondLayerField = 3;
 
-FilterNet::FilterNet(const uint& height, const uint& width, const int& span,
-	const uint& field, const ChessInput& inputLayer, std::ifstream& inFile)
+FilterNet::FilterNet(const uint& width, const int& span,
+	const uint& field, std::ifstream& inFile)
 {
 	//connect number = (width - field)/span + 1
 	//(assuming no padding)
@@ -161,7 +161,7 @@ void FilterNet::computeActivations(const ChessInput& inNet)
 		firstHiddenActivations.push_back(neuro.setActivation());
 	}
 	for (auto& neuro: secondNeurons) {
-		neuro.sumSecondLayer(this);
+		neuro.sumSecondLayer();
 		secondHiddenActivations.push_back(neuro.setActivation());
 	}
 
