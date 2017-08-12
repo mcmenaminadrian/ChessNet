@@ -29,6 +29,7 @@ double HiddenNeuron::sumInputs(const ChessInput& input)
 		rawNumber *= *it++;
 		sum += rawNumber;
 	}
+	sum += topWeights(*it);
 	return sum;
 }
 
@@ -41,6 +42,7 @@ double HiddenNeuron::sumSecondLayer()
 		rawNumber *= *it++;
 		sum += rawNumber;
 	}
+	sum += bottomWeights(*it);
 	return sum;
 }
 
