@@ -5,32 +5,26 @@
 class FilterNet
 {
 private:
-	std::vector<HiddenNeuron> neurons;
-	std::vector<std::pair<double, double> > firstHiddenActivations;
-	std::vector<HiddenNeuron> secondNeurons;
-	std::vector<std::pair<double, double> > secondHiddenActivations;
-	uint netCount;
-	uint secondLayerSize;
-	uint fieldSize;
-	uint calculateSecondLayerSize(const uint& secondSpan,
-		const uint& secondField) const;
-	void assignRandomWeights(const uint& firstFieldSize,
-		const uint& secondFieldSize);
+	std::vector<std::vector<HiddenNeuron>> fibre;
+	std::vector<std::vector<std::pair<double, double>>> fibreActivations;
+	std::vector<uint> networkSizes;
+	uint commonField;
+	uint commonSpan;
+	uint fibreDepth;
+	uint calculateNextLayerSize();
+	void assignRandomWeights();
 	std::pair<double, double> activationFunction(const double& in) const;
 	void loadWeights(std::ifstream& inFile);
 public:
-	std::vector<double> topWeights; //last of these is bias
-	std::vector<double> bottomWeights; //last of these is bias
+	std::vector<std::vector<double>> fibreWeights; // last always bias
 	FilterNet(const uint& width, const int& field,
-		const uint& span, std::ifstream& inFile);
-	void checkFilterWeights();
-	uint getNetCount() const;
+		const uint& span, const uint& depth, std::ifstream& inFile);
 	std::ostream& streamOutWeights(std::ostream& os) const;
 	std::istream& streamInWeights(std::istream& is);
 	std::pair<uint, uint> getLayerSizes() const;
 	void computeActivations(const ChessInput& inNet);
-	std::pair<double, double> getSecActivations(const uint& index) const;
-	std::pair<double, double> getFirActivations(const uint& index) const;
+	std::pair<double, double> getLayerActivations(const uint& layer,
+		const uint& neuron);
 };
 
 #endif // FILTERNET_HPP

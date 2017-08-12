@@ -12,7 +12,8 @@ private:
 
 public:
 	explicit ChessNet(const uint& width, const uint& height,
-		const uint& span, const uint& field, const uint& filters,
+		const uint& span, const uint& field,
+		const uint& filters, const uint& depth,
 		std::ifstream& weightsIn);
 	~ChessNet();
 	void loadInput(const QImage& img);
