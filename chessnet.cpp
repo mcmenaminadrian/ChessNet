@@ -47,7 +47,8 @@ ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 			weightsIn));
 	}
 
-	outLayer.setUpVariables(filters, filterCount, weightsIn);
+	uint count = filters.front().getLayerSizes().back();
+	outLayer.setUpVariables(filters,  count, weightsIn);
 }
 
 void ChessNet::loadInput(const QImage& imgIn)

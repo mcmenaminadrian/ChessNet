@@ -11,15 +11,15 @@ private:
 	std::vector<double> activationDerivatives;
 	std::vector<double> bias;
 	uint multiply;
-	uint secondFilterSize;
-	uint secondLayerNodeCount;
+	uint nodesCount;
 	uint classesToMatch;
+	uint layersCount;
 	void assignRandomWeights();
 
 public:
 	FullyConnected();
 	void setUpVariables(const std::vector<FilterNet>& filters,
-		const uint& outputClasses, std::ifstream& weightFile);
+		const uint& count, std::ifstream& weightFile);
 	std::ostream& streamOutWeights(std::ostream& os) const;
 	std::istream& streamInWeights(std::istream& is);
 	const std::vector<double>& calculateSums(

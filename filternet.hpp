@@ -22,9 +22,9 @@ public:
 		const uint& span, const uint& depth, std::ifstream& inFile);
 	std::ostream& streamOutWeights(std::ostream& os) const;
 	std::istream& streamInWeights(std::istream& is);
-	std::pair<uint, uint> getLayerSizes() const;
+	std::vector<uint> getLayerSizes() const;
 	void computeActivations(const std::vector<double>& inputs);
-	std::pair<double, double> getLayerActivations(const uint& layer,
+	const std::pair<double, double> getLayerActivations(const uint& layer,
 		const uint& neuron) const;
 };
 

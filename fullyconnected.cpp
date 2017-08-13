@@ -23,16 +23,15 @@ FullyConnected::FullyConnected()
 }
 
 void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
-	const uint& outputClasses, std::ifstream& weightFile)
+	const uint& count, std::ifstream& weightFile)
 {
-	classesToMatch = outputClasses;
-	pair<uint, uint> hiddenLayerSizes = (filters.at(0)).getLayerSizes();
-	secondFilterSize = hiddenLayerSizes.second;
-	secondLayerNodeCount = secondFilterSize * filters.size();
-
-	streamInWeights(weightFile);
+	//one to one correspondence between number of filter fibres and classes
+	classesToMatch = filters.size();
+	nodesCount = count;
+	layersCount = filters.front().getLayerSizes().size();
+	//streamInWeights(weightFile);
 	//NB: not to use in production
-	//assignRandomWeights();
+	assignRandomWeights();
 }
 
 const vector<double>& FullyConnected::calculateSums(
@@ -44,9 +43,10 @@ const vector<double>& FullyConnected::calculateSums(
 		uint i = 0;
 		double summation = 0.0;
 		for (const auto& individualWeight: filterWeights) {
-			if (i < (*filterIterator).back().size()) {
-				summation += *filterIterator.back().
-					getLayerActivations((*filterIterator).size() - 1, i++) * individualWeight;
+			if (i < (*filterIterator).getLayerSizes().back()) {
+				summation += (*filterIterator).
+					getLayerActivations(layersCount - 1,
+					i++).first * individualWeight;
 			} else {
 				i = 0;
 				summation += *biasIndex++;
@@ -93,7 +93,7 @@ istream& FullyConnected::streamInWeights(istream& is)
 	weights.clear();
 	for (uint i = 0; i < classesToMatch * multiply; i++) {
 		vector<double> smallWeights;
-		for (uint j = 0; j < secondLayerNodeCount; j++) {
+		for (uint j = 0; j < nodesCount; j++) {
 			double x;
 			is >> x;
 			smallWeights.push_back(x);
@@ -114,7 +114,7 @@ void FullyConnected::assignRandomWeights()
 	double factor = RAND_MAX;
 	for (uint i = 0; i < classesToMatch * multiply; i++) {
 		vector<double> smallWeights;
-		for (uint j = 0; j < secondLayerNodeCount; j++) {
+		for (uint j = 0; j < nodesCount; j++) {
 			double x = rand();
 			smallWeights.push_back(x/factor);
 		}

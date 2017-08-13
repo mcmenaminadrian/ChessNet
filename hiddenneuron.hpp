@@ -8,13 +8,13 @@ class HiddenNeuron
 private:
 	std::vector<uint> connections;
 	std::pair<double, double> activation;
-	const uint fieldSize;
-	FilterNet *ptrFN;
+
 public:
-	HiddenNeuron(const uint& field, FilterNet* FN);
+	HiddenNeuron();
 	void addConnection(const uint& number);
 	std::pair<double, double> setActivation(const double& sum);
 	const std::vector<uint>& getConnections() const { return connections;}
+	const std::pair<double, double> getActivation() const;
 };
 
 #endif // LEVELONENEURON_HPP

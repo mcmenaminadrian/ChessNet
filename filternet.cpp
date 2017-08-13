@@ -26,7 +26,7 @@ FilterNet::FilterNet(const uint& width, const int& span,
 		networkSizes.push_back(networkSize);
 		for (uint j = 0; j < networkSize; j++) {
 			for (uint k = 0; k < networkSize; k++) {
-				HiddenNeuron neuro(commonField, this);
+				HiddenNeuron neuro;
 				uint rowIndex = j * width;
 				uint kAdvance = k * span;
 				for (uint l = 0; l < commonField; l++) {
@@ -128,4 +128,16 @@ void FilterNet::_computeActivations(const vector<double>& inputs,
 	neuronsIt++;
 	weightsIt++;
 	_computeActivations(nextIn, neuronsIt, weightsIt);
+}
+
+vector<uint> FilterNet::getLayerSizes() const
+{
+	return networkSizes;
+}
+
+const pair<double, double> FilterNet::getLayerActivations(const uint& layer,
+	const uint& neuron) const
+{
+	vector<HiddenNeuron> layerRequested = fibre.at(layer);
+	return layerRequested.at(neuron).getActivation();
 }
