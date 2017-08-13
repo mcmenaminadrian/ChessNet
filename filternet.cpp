@@ -20,15 +20,17 @@ FilterNet::FilterNet(const uint& width, const int& span,
 	uint effectiveWidth = width;
 	commonField = field;
 	fibreDepth = depth;
+	commonSpan = span;
 	for (uint i = 0; i < fibreDepth; i++) {
 		vector<HiddenNeuron> neurons;
-		uint networkSize = 1 + (effectiveWidth - commonField) / span;
+		uint networkSize = 1 + (effectiveWidth - commonField) /
+			commonSpan;
 		networkSizes.push_back(networkSize);
 		for (uint j = 0; j < networkSize; j++) {
 			for (uint k = 0; k < networkSize; k++) {
 				HiddenNeuron neuro;
 				uint rowIndex = j * width;
-				uint kAdvance = k * span;
+				uint kAdvance = k * commonSpan;
 				for (uint l = 0; l < commonField; l++) {
 					uint lRow = l * effectiveWidth;
 					for (uint m = 0; m < commonField; m++){
@@ -58,7 +60,7 @@ void FilterNet::assignRandomWeights()
 	double factor = RAND_MAX;
 	for (uint i = 0; i < fibreDepth; i++) {
 		vector<double> weights;
-		for (uint j = 0; j <= commonField; j++) {
+		for (uint j = 0; j <= commonField * commonField; j++) {
 			double number = rand();
 			number /= factor;
 			weights.push_back(number - 0.5);

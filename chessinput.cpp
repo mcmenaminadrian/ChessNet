@@ -25,11 +25,10 @@ const double& ChessInput::getInput(const uint& index) const
 void ChessInput::setInput(const QImage& imgIn)
 {
 	for (uint i = 0; i < rowLength; i++) {
-		vector<double> pictureRow = inputRows.at(i);
 		const uchar *scanLine = imgIn.constScanLine(i);
-		for (uint j = 0; j < pictureRow.size(); j++) {
-			pictureRow.at(j) = *(scanLine + j);
-			pictureRow.at(j) /= 20000;
+		for (uint j = 0; j < inputRows.at(i).size(); j++) {
+			inputRows.at(i).at(j) = *(scanLine + j);
+			inputRows.at(i).at(j);
 		}
 	}
 }
