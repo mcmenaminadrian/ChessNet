@@ -13,6 +13,8 @@ private:
 	uint calculateNextLayerSize();
 	void assignRandomWeights();
 	void loadWeights(std::ifstream& inFile);
+	void _computeActivations(const std::vector<double>& inputs,
+		std::vector<std::vector<HiddenNeuron>>::iterator& neuronsIt);
 public:
 	std::vector<std::vector<double>> fibreWeights; // last always bias
 	FilterNet(const uint& width, const int& field,
@@ -20,7 +22,7 @@ public:
 	std::ostream& streamOutWeights(std::ostream& os) const;
 	std::istream& streamInWeights(std::istream& is);
 	std::pair<uint, uint> getLayerSizes() const;
-	void computeActivations(const ChessInput& inNet);
+	void computeActivations(const std::vector<double>& inputs);
 	std::pair<double, double> getLayerActivations(const uint& layer,
 		const uint& neuron);
 };

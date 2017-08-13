@@ -1,9 +1,9 @@
-#include <vector>
 #include <QMessageBox>
 #include <QApplication>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
@@ -18,20 +18,20 @@ FilterNet::FilterNet(const uint& width, const int& span,
 	std::ifstream& inFile)
 {
 	uint effectiveWidth = width;
-	fieldSize = field;
+	commonField = field;
 	fibreDepth = depth;
 	for (uint i = 0; i < fibreDepth; i++) {
 		vector<double> neurons;
-		uint networkSize = 1 + (effectiveWidth - fieldSize) / span;
+		uint networkSize = 1 + (effectiveWidth - commonField) / span;
 		networkSizes.push_back(networkSize);
 		for (uint j = 0; j < networkSize; j++) {
 			for (uint k = 0; k < networkSize; k++) {
-				HiddenNeuron neuro(fieldSize, this);
+				HiddenNeuron neuro(commonField, this);
 				uint rowIndex = j * width;
 				uint kAdvance = k * span;
-				for (uint l = 0; l < fieldSize; l++) {
+				for (uint l = 0; l < commonField; l++) {
 					uint lRow = l * effectiveWidth;
-					for (uint m = 0; m < fieldSize; m++) {
+					for (uint m = 0; m < commonField; m++){
 						neuro.addConnection(rowIndex +
 							kAdvance + lRow + m);
 					}
@@ -40,7 +40,6 @@ FilterNet::FilterNet(const uint& width, const int& span,
 			}
 		}
 		fibre.push_back(neurons);
-		fibreActivations.push_back(vector<pair<double, double>>); //empty for now
 		effectiveWidth = networkSize;
 	}
 
@@ -59,7 +58,7 @@ void FilterNet::assignRandomWeights()
 	double factor = RAND_MAX;
 	for (uint i = 0; i < fibreDepth; i++) {
 		vector<double> weights;
-		for (uint j = 0; j <= fieldSize; j++) {
+		for (uint j = 0; j <= commonField; j++) {
 			double number = rand();
 			number /= factor;
 			weights.push_back(number - 0.5);
@@ -86,7 +85,7 @@ istream& FilterNet::streamInWeights(istream& is)
 	fibreWeights.clear();
 	for (uint i = 0; i < fibreDepth; i++) {
 		vector<double> weights;
-		for (uint j = 0; j <= fieldSize * fieldSize; j++)
+		for (uint j = 0; j <= commonField * commonField; j++)
 		{
 			double x;
 			is >> x;
@@ -97,7 +96,12 @@ istream& FilterNet::streamInWeights(istream& is)
 	return is;
 }
 
-void FilterNet::computeActivations(const vector<double>& inputs,
+void FilterNet::computeActivations(const vector<double>& inputs)
+{
+	_computeActivations(inputs, fibre.begin())
+}
+
+void FilterNet::_computeActivations(const vector<double>& inputs,
 	vector<vector<HiddenNeuron>>::iterator& neuronsIt)
 {
 	if (neuronsIt = fibre.end()) {

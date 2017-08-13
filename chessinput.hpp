@@ -12,7 +12,6 @@ public:
 	ChessInput(const uint& width, const uint& height);
 	const double& getInput(const uint& index) const;
 	void setInput(const QImage& imgIn);
-	const std::vector<std::vector<double>>& getInputs() const
-		{return InputRows;}
+	std::vector<double> getInputs() const;
 };
 #endif // CHESSINPUT_HPP

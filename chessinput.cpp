@@ -34,3 +34,13 @@ void ChessInput::setInput(const QImage& imgIn)
 	}
 }
 
+vector<double> ChessInput::getInputs() const
+{
+	vector<double> flattenedImage;
+	for (auto row: inputRows) {
+		flattenedImage.insert(flattenedImage.end(),
+			row.begin(), row.end());
+	}
+	return flattenedImage;
+}
+
