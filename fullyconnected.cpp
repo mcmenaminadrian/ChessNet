@@ -39,20 +39,18 @@ const vector<double>& FullyConnected::calculateSums(
 	const vector<FilterNet>& filters)
 {
 	auto biasIndex = bias.begin();
-	for (const auto& smallWeights: weights) {
-		auto it = filters.begin();
+	for (const auto& filterWeights :weights) {
+		auto filterIterator = filters.begin();
 		uint i = 0;
 		double summation = 0.0;
-		for (const auto& individualWeight: smallWeights) {
-			if (i < secondFilterSize) {
-				summation +=
-					((*it).getSecActivations(i++)).first *
-					individualWeight;
+		for (const auto& individualWeight: filterWeights) {
+			if (i < (*filterIterator).back().size()) {
+				summation += *filterIterator.back().
+					getLayerActivations((*filterIterator).size() - 1, i++) * individualWeight;
 			} else {
 				i = 0;
-				summation +=
-					activationFunction(*biasIndex++);
-				it++;
+				summation += *biasIndex++;
+				filterIterator++;
 			}
 		}
 		sums.push_back(summation);

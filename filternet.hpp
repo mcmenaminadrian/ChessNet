@@ -14,7 +14,8 @@ private:
 	void assignRandomWeights();
 	void loadWeights(std::ifstream& inFile);
 	void _computeActivations(const std::vector<double>& inputs,
-		std::vector<std::vector<HiddenNeuron>>::iterator& neuronsIt);
+		std::vector<std::vector<HiddenNeuron>>::iterator& neuronsIt,
+		std::vector<std::vector<double>>::iterator& weightsIt);
 public:
 	std::vector<std::vector<double>> fibreWeights; // last always bias
 	FilterNet(const uint& width, const int& field,
@@ -24,7 +25,7 @@ public:
 	std::pair<uint, uint> getLayerSizes() const;
 	void computeActivations(const std::vector<double>& inputs);
 	std::pair<double, double> getLayerActivations(const uint& layer,
-		const uint& neuron);
+		const uint& neuron) const;
 };
 
 #endif // FILTERNET_HPP

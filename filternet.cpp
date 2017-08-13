@@ -21,7 +21,7 @@ FilterNet::FilterNet(const uint& width, const int& span,
 	commonField = field;
 	fibreDepth = depth;
 	for (uint i = 0; i < fibreDepth; i++) {
-		vector<double> neurons;
+		vector<HiddenNeuron> neurons;
 		uint networkSize = 1 + (effectiveWidth - commonField) / span;
 		networkSizes.push_back(networkSize);
 		for (uint j = 0; j < networkSize; j++) {
@@ -98,25 +98,34 @@ istream& FilterNet::streamInWeights(istream& is)
 
 void FilterNet::computeActivations(const vector<double>& inputs)
 {
-	_computeActivations(inputs, fibre.begin())
+	vector<vector<HiddenNeuron>>::iterator fibreIt = fibre.begin();
+	vector<vector<double>>::iterator weightsIt = fibreWeights.begin();
+	_computeActivations(inputs, fibreIt, weightsIt);
 }
 
 void FilterNet::_computeActivations(const vector<double>& inputs,
-	vector<vector<HiddenNeuron>>::iterator& neuronsIt)
+	vector<vector<HiddenNeuron>>::iterator& neuronsIt,
+	vector<vector<double>>::iterator& weightsIt)
 {
-	if (neuronsIt = fibre.end()) {
+	if (neuronsIt == fibre.end()) {
 		return;
 	}
 	vector<HiddenNeuron> neurons = *neuronsIt;
-	vector<double> nextInputs;
+	vector<double> weights = *weightsIt;
+	vector<double> nextIn;
+	uint weightCounter = 0;
 	for (auto neuro: neurons) {
 		double sum = 0.0;
 		for (auto numb: neuro.getConnections()) {
-			sum += inputs.at(numb);
+			sum += inputs.at(numb) * weights.at(weightCounter);
+			weightCounter++;
+			weightCounter = weightCounter % (weights.size() - 1);
 		}
+		sum += weights.back();
 		pair<double, double> actives = neuro.setActivation(sum);
 		nextIn.push_back(actives.first);
 	}
 	neuronsIt++;
-	return computeActivations(nextIn, neuronsIt);
+	weightsIt++;
+	_computeActivations(nextIn, neuronsIt, weightsIt);
 }
