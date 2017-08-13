@@ -40,6 +40,7 @@ FilterNet::FilterNet(const uint& width, const int& span,
 			}
 		}
 		fibre.push_back(neurons);
+		fibreActivations.push_back(vector<pair<double, double>>); //empty for now
 		effectiveWidth = networkSize;
 	}
 
@@ -65,7 +66,6 @@ void FilterNet::assignRandomWeights()
 		}
 		fibreWeights.push_back(weights);
 	}
-	checkFilterWeights();
 }
 
 ostream& FilterNet::streamOutWeights(ostream& os) const
@@ -97,28 +97,22 @@ istream& FilterNet::streamInWeights(istream& is)
 	return is;
 }
 
-void FilterNet::computeActivations(const ChessInput& inNet)
+void FilterNet::computeActivations(const vector<double>& inputs,
+	vector<vector<HiddenNeuron>>::iterator& neuronsIt)
 {
-
-
-
-	for (auto& neuro: neurons) {
-		neuro.sumInputs(inNet);
-		firstHiddenActivations.push_back(neuro.setActivation());
+	if (neuronsIt = fibre.end()) {
+		return;
 	}
-	for (auto& neuro: secondNeurons) {
-		neuro.sumSecondLayer();
-		secondHiddenActivations.push_back(neuro.setActivation());
+	vector<HiddenNeuron> neurons = *neuronsIt;
+	vector<double> nextInputs;
+	for (auto neuro: neurons) {
+		double sum = 0.0;
+		for (auto numb: neuro.getConnections()) {
+			sum += inputs.at(numb);
+		}
+		pair<double, double> actives = neuro.setActivation(sum);
+		nextIn.push_back(actives.first);
 	}
-
-}
-
-pair<double, double> FilterNet::getSecActivations(const uint &index) const
-{
-	return secondHiddenActivations.at(index);
-}
-
-pair<double, double> FilterNet::getFirActivations(const uint &index) const
-{
-	return firstHiddenActivations.at(index);
+	neuronsIt++;
+	return computeActivations(nextIn, neuronsIt);
 }

@@ -46,7 +46,7 @@ double HiddenNeuron::sumSecondLayer()
 	return sum;
 }
 
-pair<double, double> HiddenNeuron::setActivation()
+pair<double, double> HiddenNeuron::setActivation(const double& sum)
 {
 	activation = pair<double, double>(activationFunction(sum),
 		activationDerivative(sum));

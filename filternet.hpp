@@ -6,14 +6,12 @@ class FilterNet
 {
 private:
 	std::vector<std::vector<HiddenNeuron>> fibre;
-	std::vector<std::vector<std::pair<double, double>>> fibreActivations;
 	std::vector<uint> networkSizes;
 	uint commonField;
 	uint commonSpan;
 	uint fibreDepth;
 	uint calculateNextLayerSize();
 	void assignRandomWeights();
-	std::pair<double, double> activationFunction(const double& in) const;
 	void loadWeights(std::ifstream& inFile);
 public:
 	std::vector<std::vector<double>> fibreWeights; // last always bias

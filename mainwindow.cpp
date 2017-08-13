@@ -22,7 +22,8 @@ static const uint imageWidth = 100;
 static const uint imageHeight = 100;
 static const uint convSpan = 1;
 static const uint field = 3;
-static const uint filters = 11;
+static const uint filters = 30;
+static const uint fibreDepth = 5;
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -56,7 +57,7 @@ void MainWindow::on_fileSelect_clicked()
 	ifstream weightsFile;
 	weightsFile.open("weights.txt");
 	ChessNet chess(imageWidth, imageHeight, convSpan, field, filters,
-		weightsFile);
+		fibreDepth, weightsFile);
 	QImage inputFile(JPEGName, "JPG");
 	chess.loadInput(inputFile);
 	ui->progressNN->setProperty("value", 5);
