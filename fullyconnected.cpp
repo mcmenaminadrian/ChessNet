@@ -29,9 +29,9 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 	classesToMatch = filters.size();
 	nodesCount = count;
 	layersCount = filters.front().getLayerSizes().size();
-	//streamInWeights(weightFile);
+	streamInWeights(weightFile);
 	//NB: not to use in production
-	assignRandomWeights();
+	//assignRandomWeights();
 }
 
 const vector<double>& FullyConnected::calculateSums(

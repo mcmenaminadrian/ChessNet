@@ -59,7 +59,7 @@ void ChessNet::loadInput(const QImage& imgIn)
 void ChessNet::feedForward() {
 
 	const vector<double> inputVector = inputNet.getInputs();
-	for (auto filter: filters) {
+	for (auto& filter: filters) {
 		filter.computeActivations(inputVector);
 	}
 

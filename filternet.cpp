@@ -45,9 +45,9 @@ FilterNet::FilterNet(const uint& width, const int& span,
 		effectiveWidth = networkSize;
 	}
 
-	//loadWeights(inFile);
+	loadWeights(inFile);
 	//NB only use next line at start up
-	assignRandomWeights();
+	//assignRandomWeights();
 }
 
 void FilterNet::loadWeights(ifstream& inFile)
@@ -112,13 +112,13 @@ void FilterNet::_computeActivations(const vector<double>& inputs,
 	if (neuronsIt == fibre.end()) {
 		return;
 	}
-	vector<HiddenNeuron> neurons = *neuronsIt;
+	vector<HiddenNeuron>& neurons = *neuronsIt;
 	vector<double> weights = *weightsIt;
 	vector<double> nextIn;
 	uint weightCounter = 0;
-	for (auto neuro: neurons) {
+	for (auto& neuro: neurons) {
 		double sum = 0.0;
-		for (auto numb: neuro.getConnections()) {
+		for (const auto& numb: neuro.getConnections()) {
 			sum += inputs.at(numb) * weights.at(weightCounter);
 			weightCounter++;
 			weightCounter = weightCounter % (weights.size() - 1);
@@ -140,6 +140,6 @@ vector<uint> FilterNet::getLayerSizes() const
 const pair<double, double> FilterNet::getLayerActivations(const uint& layer,
 	const uint& neuron) const
 {
-	vector<HiddenNeuron> layerRequested = fibre.at(layer);
+	const vector<HiddenNeuron>& layerRequested = fibre.at(layer);
 	return layerRequested.at(neuron).getActivation();
 }
