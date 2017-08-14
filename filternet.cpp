@@ -29,7 +29,7 @@ FilterNet::FilterNet(const uint& width, const int& span,
 		for (uint j = 0; j < networkSize; j++) {
 			for (uint k = 0; k < networkSize; k++) {
 				HiddenNeuron neuro;
-				uint rowIndex = j * width;
+				uint rowIndex = j * effectiveWidth;
 				uint kAdvance = k * commonSpan;
 				for (uint l = 0; l < commonField; l++) {
 					uint lRow = l * effectiveWidth;
