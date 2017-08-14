@@ -26,8 +26,8 @@ static const uint imageWidth = 100;
 static const uint imageHeight = 100;
 static const uint convSpan = 1;
 static const uint field = 3;
-static const uint filters = 30;
-static const uint fibreDepth = 5;
+static const uint filters = 25;
+static const uint fibreDepth = 7;
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -87,6 +87,7 @@ vector<pair<string, uint>> MainWindow::getTestFileList(QString tst)
 		pair<string, uint> answer(pieces[0].toStdString(),
 			pieces[1].toInt());
 		returnPairs.push_back(answer);
+		line = in.readLine();
 	}
 	return returnPairs;
 }

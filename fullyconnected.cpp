@@ -37,6 +37,7 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 const vector<double>& FullyConnected::calculateSums(
 	const vector<FilterNet>& filters)
 {
+	sums.clear();
 	auto biasIndex = bias.begin();
 	for (const auto& filterWeights :weights) {
 		auto filterIterator = filters.begin();
@@ -61,6 +62,7 @@ const vector<double>& FullyConnected::calculateSums(
 
 pair<vector<double>&, vector<double>&> FullyConnected::returnActivations()
 {
+	activations.clear();
 	for (const auto& summations: sums) {
 		activations.push_back(activationFunction(summations));
 		activationDerivatives.push_back(

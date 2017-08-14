@@ -69,9 +69,10 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 			outLayer.returnActivations();
 	uint i = 0;
 	double totalError = 0.0;
+	cout << "FILE out: " << fileName << endl;
 	for (const auto& answers: actives.first) {
 		double iterationError = 0.0;
-		cout << "FILEcout: " << fileName << endl;
+
 		cout << "Neuron " << i++ << " returns ";
 		cout << answers << endl;
 		if (i == imageClass) {
