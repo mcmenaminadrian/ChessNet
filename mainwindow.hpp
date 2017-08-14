@@ -22,6 +22,7 @@ private slots:
 	
 private:
 	Ui::MainWindow *ui;
+	std::vector<std::pair<std::string, uint>> getTestFileList(QString tst);
 };
 
 #endif // MAINWINDOW_HPP

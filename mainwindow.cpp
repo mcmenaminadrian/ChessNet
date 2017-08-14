@@ -7,6 +7,10 @@
 #include <ostream>
 #include <fstream>
 #include <sstream>
+#include <string>
+#include <QFile>
+#include <QIODevice>
+#include <QTextStream>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
@@ -44,29 +48,45 @@ void MainWindow::on_fileSelect_clicked()
 {
 	ui->fileName->setEnabled(false);
 	ui->progressNN->setEnabled(false);
-	QString JPEGName = QFileDialog::getOpenFileName(this,
-		tr("Select JPEG"), "", tr("JPEGs (*.jpeg *.jpg *.jfif)"));
-	ui->fileName->setText(JPEGName);
+	QString trainingName = QFileDialog::getOpenFileName(this,
+		tr("Select training file"), "", tr("TXT (*.txt)"));
+	ui->fileName->setText(trainingName);
 	ui->fileName->setVisible(true);
 	ui->fileName->setEnabled(true);
-	ui->progressNN->setProperty("value", 0);
-	ui->progressNN->setVisible(true);
-	ui->progressNN->setEnabled(true);
+
 	ui->fileSelect->setEnabled(false);
 	//load input
 	ifstream weightsFile;
 	weightsFile.open("weights.txt");
 	ChessNet chess(imageWidth, imageHeight, convSpan, field, filters,
 		fibreDepth, weightsFile);
-	QImage inputFile(JPEGName, "JPG");
-	chess.loadInput(inputFile);
-	ui->progressNN->setProperty("value", 5);
-	chess.feedForward();
-	ui->progressNN->setProperty("value", 25);
+	vector<pair<string, uint>> testFileList =
+		getTestFileList(trainingName);
+	for (auto tests: testFileList) {
+		QImage inputFile(QString(tests.first.c_str()), "JPG");
+		chess.loadInput(inputFile);
+		chess.feedForward(tests.first, tests.second);
+	}
 	chess.storeWeights();
 }
 
 void MainWindow::on_pushButton_clicked()
 {
    QApplication::exit();
+}
+
+vector<pair<string, uint>> MainWindow::getTestFileList(QString tst)
+{
+	QFile tester(tst);
+	tester.open(QIODevice::ReadOnly | QIODevice::Text);
+	vector<pair<string, uint>> returnPairs;
+	QTextStream in(&tester);
+	QString line = in.readLine();
+	while (!line.isNull()) {
+		QStringList pieces = line.split(' ', QString::SkipEmptyParts);
+		pair<string, uint> answer(pieces[0].toStdString(),
+			pieces[1].toInt());
+		returnPairs.push_back(answer);
+	}
+	return returnPairs;
 }

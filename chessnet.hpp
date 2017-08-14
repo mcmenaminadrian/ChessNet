@@ -17,7 +17,7 @@ public:
 		std::ifstream& weightsIn);
 	~ChessNet();
 	void loadInput(const QImage& img);
-	void feedForward();
+	void feedForward(std::__cxx11::string&, uint imageClass);
 	void storeWeights();
 };
 #endif // CHESSNET_HPP

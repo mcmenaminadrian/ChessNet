@@ -56,7 +56,8 @@ void ChessNet::loadInput(const QImage& imgIn)
 	inputNet.setInput(imgIn);
 }
 
-void ChessNet::feedForward() {
+void ChessNet::feedForward(string& fileName, uint imageClass)
+{
 
 	const vector<double> inputVector = inputNet.getInputs();
 	for (auto& filter: filters) {
@@ -67,10 +68,22 @@ void ChessNet::feedForward() {
 	pair<vector<double>, vector<double>> actives =
 			outLayer.returnActivations();
 	uint i = 0;
+	double totalError = 0.0;
 	for (const auto& answers: actives.first) {
+		double iterationError = 0.0;
+		cout << "FILEcout: " << fileName << endl;
 		cout << "Neuron " << i++ << " returns ";
 		cout << answers << endl;
+		if (i == imageClass) {
+			iterationError = answers - 1.0;
+		} else {
+			iterationError = answers;
+		}
+		cout << "Error is " << iterationError << endl;
+		totalError += (iterationError * iterationError);
 	}
+	cout << "==========" << endl;
+	cout << "Average Error is " << totalError / i << endl;
 
 }
 
