@@ -108,7 +108,9 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 void ChessNet::tryFix(const double& factor, const vector<double>& revKernel,
 	uint fibreNumber, uint layerNumber, const vector<uint>& layerSizes)
 {
-	vector<double>& weightsToFix
+	vector<double>& weightsToFix =
+		filters.at(fibreNumber).fibreWeights.at(layerNumber);
+
 }
 
 vector<double> ChessNet::reversedWeights(vector<double> kernel) const
