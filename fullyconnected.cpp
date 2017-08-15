@@ -63,6 +63,7 @@ const vector<double>& FullyConnected::calculateSums(
 pair<vector<double>&, vector<double>&> FullyConnected::returnActivations()
 {
 	activations.clear();
+	activationDerivatives.clear();
 	for (const auto& summations: sums) {
 		activations.push_back(activationFunction(summations));
 		activationDerivatives.push_back(
@@ -123,5 +124,37 @@ void FullyConnected::assignRandomWeights()
 		double x = rand();
 		bias.push_back(x / factor);
 		weights.push_back(smallWeights);
+	}
+}
+
+vector<double> FullyConnected::errGrads(const vector<FilterNet>& filters,
+	const double& error, const double& deriv, const uint& index) const
+{
+	vector<double> gradients;
+	const double errorFactor = -2 * error;
+	const uint finalLayerSize = filters.at(0).getLayerSizes().back();
+	const uint depth = filters.at(0).getDepth();
+	for (auto& filter: filters) {
+		for (uint i = 0; i < finalLayerSize; i++) {
+			const pair<double, double> answer =
+				filter.getLayerActivations(depth - 1, i);
+			gradients.push_back(errorFactor * answer.first * deriv);
+		}
+	}
+	gradients.push_back(errorFactor * bias.at(index) * deriv);
+	return gradients;
+}
+
+void FullyConnected::tryCorrections(const double &factor,
+	const vector<vector<double>> &gradients)
+{
+	uint index = 0;
+	for (auto& weightVector: weights) {
+		const vector<double>& filterGrads = gradients.at(index);
+		uint jindex = 0;
+		for (auto& weight: weightVector) {
+			weight -= factor * filterGrads.at(jindex++);
+		}
+		bias.at(index++) -= factor * filterGrads.at(jindex);
 	}
 }

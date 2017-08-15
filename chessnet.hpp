@@ -9,6 +9,7 @@ private:
 	ChessInput inputNet;
 	FullyConnected outLayer;
 	std::stringstream allWeights;
+	std::vector<double> reversedWeights(std::vector<double> kernel) const;
 
 public:
 	explicit ChessNet(const uint& width, const uint& height,

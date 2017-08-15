@@ -26,6 +26,7 @@ public:
 	void computeActivations(const std::vector<double>& inputs);
 	const std::pair<double, double> getLayerActivations(const uint& layer,
 		const uint& neuron) const;
+	uint getDepth() const {return fibreDepth;}
 };
 
 #endif // FILTERNET_HPP

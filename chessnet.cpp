@@ -69,23 +69,51 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 			outLayer.returnActivations();
 	uint i = 0;
 	double totalError = 0.0;
-	cout << "FILE out: " << fileName << endl;
+	vector<double> basicErrors;
 	for (const auto& answers: actives.first) {
 		double iterationError = 0.0;
-
-		cout << "Neuron " << i++ << " returns ";
-		cout << answers << endl;
+		i++;
 		if (i == imageClass) {
-			iterationError = answers - 1.0;
+			iterationError = 1.0 - answers;
 		} else {
-			iterationError = answers;
+			iterationError = -answers;
 		}
-		cout << "Error is " << iterationError << endl;
+		basicErrors.push_back(iterationError);
 		totalError += (iterationError * iterationError);
 	}
 	cout << "==========" << endl;
+	cout << "FILE out: " << fileName << endl;
 	cout << "Average Error is " << totalError / i << endl;
 
+	//now try error correction
+	vector<vector<double>> gradients;
+	vector<double>::iterator it = basicErrors.begin();
+	i = 0;
+	for (const auto& derivs: actives.second) {
+		gradients.push_back(outLayer.errGrads(filters, *it++, derivs,
+		i++));
+	}
+	outLayer.tryCorrections(0.1, gradients);
+	auto layerSizes = filters.begin().getLayerSizes();
+	for (uint i = depth - 1; i >= 0; i++) {
+		for (uint j = 0; j < filters.size(); j++) {
+			vector<double> revKernel = reversedWeights(
+				filters.at(j).fibreWeights.at(i));
+			tryFix(0.1, revKernel, j, i, basicErrors.at(j), layerSizes)
+		}
+
+	}
+}
+
+void ChessNet::tryFix(const double& factor, const vector<double>& revKernel,
+	uint fibreNumber, uint layerNumber, const vector<uint>& layerSizes)
+{
+	vector<double>& weightsToFix
+}
+
+vector<double> ChessNet::reversedWeights(vector<double> kernel) const
+{
+	return kernel.reverse(begin(kernel), end(kernel));
 }
 
 void ChessNet::storeWeights()
