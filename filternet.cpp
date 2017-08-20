@@ -127,6 +127,27 @@ void FilterNet::_computeActivations(const vector<double>& inputs,
 		pair<double, double> actives = neuro.setActivation(sum);
 		nextIn.push_back(actives.first);
 	}
+
+#ifdef FILTEREDIMAGES
+	//output filtered Image
+	uint numb = neurons.size();
+	uint iSize = sqrt(numb);
+	QImage filteredImage(iSize, iSize, QImage::Format_Grayscale8);
+	uint i = 0;
+	uint j = 0;
+	for (auto neuro: neurons) {
+		uint pixVal = neuro.getActivation().first;
+		filteredImage.setPixel(i++, j, qRgb(pixVal, pixVal, pixVal));
+		if (i >= iSize) {
+			i = 0;
+			j++;
+		}
+	}
+	int randomValue = qrand()%100000;
+	QString fileN = QString::number(randomValue) + QString(".jpg");
+	filteredImage.save(fileN);
+#endif
+
 	neuronsIt++;
 	weightsIt++;
 	_computeActivations(nextIn, neuronsIt, weightsIt);

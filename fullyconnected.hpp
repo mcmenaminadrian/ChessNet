@@ -26,11 +26,9 @@ public:
 		const std::vector<FilterNet>& filters);
 	std::pair<std::vector<double>&, std::vector<double>&>
 		returnActivations();
-	std::vector<double> errGrads(const std::vector<FilterNet>& filters,
-		const double& error, const double& deriv,
-		const uint& index) const;
 	void tryCorrections(const double &factor,
-		const std::vector<std::vector<double>> &gradients);
+		const vector<FilterNet>& filters,
+		const vector<double>& deltas);
 };
 
 #endif // FULLYCONNECTED_HPP

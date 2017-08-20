@@ -127,26 +127,9 @@ void FullyConnected::assignRandomWeights()
 	}
 }
 
-vector<double> FullyConnected::errGrads(const vector<FilterNet>& filters,
-	const double& error, const double& deriv, const uint& index) const
-{
-	vector<double> gradients;
-	const double errorFactor = -2 * error;
-	const uint finalLayerSize = filters.at(0).getLayerSizes().back();
-	const uint depth = filters.at(0).getDepth();
-	for (auto& filter: filters) {
-		for (uint i = 0; i < finalLayerSize; i++) {
-			const pair<double, double> answer =
-				filter.getLayerActivations(depth - 1, i);
-			gradients.push_back(errorFactor * answer.first * deriv);
-		}
-	}
-	gradients.push_back(errorFactor * bias.at(index) * deriv);
-	return gradients;
-}
 
 void FullyConnected::tryCorrections(const double &factor,
-	const vector<vector<double>> &gradients)
+	const vector<FilterNet>& filters, const vector<double> &deltas)
 {
 	uint index = 0;
 	for (auto& weightVector: weights) {
