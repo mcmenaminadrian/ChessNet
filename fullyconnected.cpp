@@ -35,8 +35,6 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 const vector<double>& FullyConnected::calculateSums(
 	const vector<FilterNet>& filters)
 {
-	uint totalNodeCount = filters.at(0).getLayerSizes().back();
-	totalNodeCount *= totalNodeCount;
 	auto filterIterator = filters.begin();
 	for (const auto& filterWeights :weights) {
 		uint i = 0;
