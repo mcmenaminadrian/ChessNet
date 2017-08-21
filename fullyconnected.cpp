@@ -134,13 +134,23 @@ void FullyConnected::assignRandomWeights()
 void FullyConnected::tryCorrections(const double &factor,
 	const vector<FilterNet>& filters, const vector<double> &deltas)
 {
-	uint index = 0;
-	for (auto& weightVector: weights) {
-		const vector<double>& filterGrads = gradients.at(index);
-		uint jindex = 0;
-		for (auto& weight: weightVector) {
-			weight -= factor * filterGrads.at(jindex++);
+	uint neuronCount = filters.size();
+	uint finalCount = filters.at(0).getLayerSizes().back();
+	finalCount *= finalCount;
+	uint finalLayer = filters.at(0).getDepth() - 1;
+	auto filtersIt = filters.begin();
+	for (auto& fibreWeights: weights) {
+		uint index = 0;
+		FilterNet currentFilter = *filtersIt++;
+		for (auto& individualWeight: fibreWeights){
+			double rawCorrection = -1 *
+				currentFilter.
+				getLayerActivations(finalLayer,
+					index % finalCount).first *
+				deltas.at(index % neuronCount);
+			individualWeight -= (rawCorrection * factor);
+			index++;
 		}
-		bias.at(index++) -= factor * filterGrads.at(jindex);
+
 	}
 }

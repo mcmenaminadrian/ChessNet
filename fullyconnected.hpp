@@ -27,8 +27,8 @@ public:
 	std::pair<std::vector<double>&, std::vector<double>&>
 		returnActivations();
 	void tryCorrections(const double &factor,
-		const vector<FilterNet>& filters,
-		const vector<double>& deltas);
+		const std::vector<FilterNet>& filters,
+		const std::vector<double>& deltas);
 };
 
 #endif // FULLYCONNECTED_HPP
