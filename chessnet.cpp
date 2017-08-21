@@ -73,14 +73,16 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	for (const auto& answers: actives.first) {
 		double iterationError = 0.0;
 		if (i == imageClass) {
-			iterationError = 1.0 - answers;
+			iterationError = 500.0 - answers;
 		} else {
-			iterationError = -answers;
+			iterationError = -500.0 - answers;
 		}
 		basicErrors.push_back(iterationError);
 		totalError += (iterationError * iterationError) / 2;
 		i++;
+		cout << iterationError << ", ";
 	}
+	cout << endl;
 	cout << "==========" << endl;
 	cout << "FILE out: " << fileName << endl;
 	cout << "Average Error is " << totalError / i << endl;
@@ -94,7 +96,7 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	}
 
 	//fix up fully connected layer
-	outLayer.tryCorrections(0.1, filters, deltas);
+	outLayer.tryCorrections(0.01, filters, deltas);
 
 	//fix up filters
 	auto layerSizes = filters.front().getLayerSizes();
@@ -102,14 +104,13 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	for (auto& filter: filters) {
 		tryFix(0.1, filter, basicErrors, layerSizes, depth);
 	}
-
-
 }
 
 void ChessNet::tryFix(const double& factor, FilterNet& filter,
 	const vector<double>& basicErrors, const vector<uint>& layerSizes,
 	const uint depth)
 {
+	return;
 	uint probe = depth - 1;
 	auto layersIt = layerSizes.rbegin();
 	vector<double>& weight = filter.fibreWeights.at(probe);

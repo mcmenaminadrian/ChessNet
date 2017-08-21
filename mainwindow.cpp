@@ -65,7 +65,9 @@ void MainWindow::on_fileSelect_clicked()
 	for (auto tests: testFileList) {
 		QImage inputFile(QString(tests.first.c_str()), "JPG");
 		chess.loadInput(inputFile);
-		chess.feedForward(tests.first, tests.second);
+		for (uint i = 0 ; i < 10; i++) {
+			chess.feedForward(tests.first, tests.second);
+		}
 	}
 	chess.storeWeights();
 }

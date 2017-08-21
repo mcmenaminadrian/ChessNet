@@ -40,9 +40,10 @@ const vector<double>& FullyConnected::calculateSums(
 		uint i = 0;
 		uint index = 0;
 		for (const auto& individualWeight: filterWeights) {
-			sums.at(index++) += (*filterIterator).
+			sums.at(index) += (*filterIterator).
 				getLayerActivations(layersCount - 1,
 				i).first * individualWeight;
+			index++;
 			index %= classesToMatch;
 			if (index == 0) {
 				i++;
@@ -122,7 +123,7 @@ void FullyConnected::assignRandomWeights()
 			}
 		}
 		double x = rand();
-		bias.push_back(x / factor - 0.5);
+		bias.push_back(x / factor);
 		weights.push_back(smallWeights);
 	}
 }
@@ -131,23 +132,30 @@ void FullyConnected::assignRandomWeights()
 void FullyConnected::tryCorrections(const double &factor,
 	const vector<FilterNet>& filters, const vector<double> &deltas)
 {
-	uint neuronCount = filters.size();
+	uint outNeuronCount = filters.size();
+	uint filterLayerSize = filters.at(0).getLayerSizes().back();
+	filterLayerSize *= filterLayerSize;
+	auto innerCorrections = vector<double>(filterLayerSize * outNeuronCount, 0.0);
+	auto fullCorrections =
+		vector<vector<double>>(outNeuronCount, innerCorrections);
 	uint finalLayer = filters.at(0).getDepth() - 1;
-	auto filtersIt = filters.begin();
-	for (auto& fibreWeights: weights) {
-		uint index = 0;
-		FilterNet currentFilter = *filtersIt++;
-		for (auto& individualWeight: fibreWeights){
-			double rawCorrection = -1 *
-				currentFilter.
-				getLayerActivations(finalLayer,
-					index / neuronCount).first *
-				deltas.at(index % neuronCount);
-			individualWeight -= (rawCorrection * factor);
-			index++;
+	for (uint i = 0; i < outNeuronCount; i++) {
+		for (uint j = 0; j < filterLayerSize; j++) {
+			double grad = -1 * filters.at(i).getLayerActivations(finalLayer, j).first;
+			for (uint k = 0; k < outNeuronCount; k++) {
+				(fullCorrections.at(i)).at(j * outNeuronCount + k) = grad * deltas.at(k);
+			}
 		}
-
 	}
+
+	for (uint i = 0; i < outNeuronCount; i++) {
+		auto corrIt = fullCorrections.at(i).begin();
+		for (auto& weight: weights.at(i)) {
+			weight -= ((*corrIt) * factor);
+			corrIt++;
+		}
+	}
+
 	for (uint i = 0; i < filters.size(); i++) {
 		double biasCorrection = -1 * bias.at(i) * deltas.at(i);
 		bias.at(i) = bias.at(i) - (biasCorrection * factor);
