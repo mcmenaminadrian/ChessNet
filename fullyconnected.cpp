@@ -37,21 +37,20 @@ const vector<double>& FullyConnected::calculateSums(
 {
 	uint totalNodeCount = filters.at(0).getLayerSizes().back();
 	totalNodeCount *= totalNodeCount;
+	auto filterIterator = filters.begin();
 	for (const auto& filterWeights :weights) {
-		auto filterIterator = filters.begin();
 		uint i = 0;
 		uint index = 0;
 		for (const auto& individualWeight: filterWeights) {
-			if (i < totalNodeCount) {
-				sums.at(index++) += (*filterIterator).
-					getLayerActivations(layersCount - 1,
-					i++).first * individualWeight;
-				index %= classesToMatch;
-			} else {
-				i = 0;
-				filterIterator++;
+			sums.at(index++) += (*filterIterator).
+				getLayerActivations(layersCount - 1,
+				i).first * individualWeight;
+			index %= classesToMatch;
+			if (index == 0) {
+				i++;
 			}
 		}
+		filterIterator++;
 	}
 	for (uint i = 0; i < classesToMatch; i++) {
 		sums.at(i) += bias.at(i);
