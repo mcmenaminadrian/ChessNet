@@ -35,23 +35,20 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 const vector<double>& FullyConnected::calculateSums(
 	const vector<FilterNet>& filters)
 {
-	uint totalNodeCount = filters.at(0).getLayerSizes().back();
-	totalNodeCount *= totalNodeCount;
+	auto filterIterator = filters.begin();
 	for (const auto& filterWeights :weights) {
-		auto filterIterator = filters.begin();
 		uint i = 0;
 		uint index = 0;
 		for (const auto& individualWeight: filterWeights) {
-			if (i < totalNodeCount) {
-				sums.at(index++) += (*filterIterator).
-					getLayerActivations(layersCount - 1,
-					i++).first * individualWeight;
-				index %= classesToMatch;
-			} else {
-				i = 0;
-				filterIterator++;
+			sums.at(index++) += (*filterIterator).
+				getLayerActivations(layersCount - 1,
+				i).first * individualWeight;
+			index %= classesToMatch;
+			if (index == 0) {
+				i++;
 			}
 		}
+		filterIterator++;
 	}
 	for (uint i = 0; i < classesToMatch; i++) {
 		sums.at(i) += bias.at(i);
@@ -135,8 +132,6 @@ void FullyConnected::tryCorrections(const double &factor,
 	const vector<FilterNet>& filters, const vector<double> &deltas)
 {
 	uint neuronCount = filters.size();
-	uint finalCount = filters.at(0).getLayerSizes().back();
-	finalCount *= finalCount;
 	uint finalLayer = filters.at(0).getDepth() - 1;
 	auto filtersIt = filters.begin();
 	for (auto& fibreWeights: weights) {
@@ -146,11 +141,15 @@ void FullyConnected::tryCorrections(const double &factor,
 			double rawCorrection = -1 *
 				currentFilter.
 				getLayerActivations(finalLayer,
-					index % finalCount).first *
+					index / neuronCount).first *
 				deltas.at(index % neuronCount);
 			individualWeight -= (rawCorrection * factor);
 			index++;
 		}
 
+	}
+	for (uint i = 0; i < filters.size(); i++) {
+		double biasCorrection = -1 * bias.at(i) * deltas.at(i);
+		bias.at(i) = bias.at(i) - (biasCorrection * factor);
 	}
 }

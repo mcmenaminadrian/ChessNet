@@ -72,7 +72,6 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	vector<double> basicErrors;
 	for (const auto& answers: actives.first) {
 		double iterationError = 0.0;
-		i++;
 		if (i == imageClass) {
 			iterationError = 1.0 - answers;
 		} else {
@@ -80,6 +79,7 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 		}
 		basicErrors.push_back(iterationError);
 		totalError += (iterationError * iterationError) / 2;
+		i++;
 	}
 	cout << "==========" << endl;
 	cout << "FILE out: " << fileName << endl;
