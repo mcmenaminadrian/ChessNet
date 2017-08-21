@@ -39,7 +39,7 @@ istream& operator>>(istream& is, FullyConnected& fc)
 
 ChessNet::ChessNet(const uint& width, const uint& height, const uint& span,
 	const uint& field, const uint& filterCount, const uint& depth,
-	ifstream& weightsIn):inputNet(width, height)
+	ifstream& weightsIn):inputNet(width, height), outLayer(filterCount)
 {
 
 	for (uint i = 0; i < filterCount; i++) {

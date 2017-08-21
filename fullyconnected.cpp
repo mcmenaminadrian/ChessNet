@@ -16,10 +16,8 @@
 using namespace std;
 
 
-FullyConnected::FullyConnected()
+FullyConnected::FullyConnected(const uint& filterCount): sums(filterCount, 0.0)
 {
-	//change this to change output neuron number
-	multiply = 1;
 }
 
 void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
@@ -37,28 +35,29 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 const vector<double>& FullyConnected::calculateSums(
 	const vector<FilterNet>& filters)
 {
-	sums.clear();
-	auto biasIndex = bias.begin();
+	uint totalNodeCount = filters.at(0).getLayerSizes().back();
+	totalNodeCount *= totalNodeCount;
 	for (const auto& filterWeights :weights) {
 		auto filterIterator = filters.begin();
 		uint i = 0;
-		double summation = 0.0;
+		uint index = 0;
 		for (const auto& individualWeight: filterWeights) {
-			if (i < (*filterIterator).getLayerSizes().back()) {
-				summation += (*filterIterator).
+			if (i < totalNodeCount) {
+				sums.at(index++) += (*filterIterator).
 					getLayerActivations(layersCount - 1,
 					i++).first * individualWeight;
+				index %= classesToMatch;
 			} else {
 				i = 0;
-				summation += *biasIndex++;
 				filterIterator++;
 			}
 		}
-		sums.push_back(summation);
+	}
+	for (uint i = 0; i < classesToMatch; i++) {
+		sums.at(i) += bias.at(i);
 	}
 	return sums;
 }
-
 
 pair<vector<double>&, vector<double>&> FullyConnected::returnActivations()
 {
@@ -94,16 +93,18 @@ ostream& FullyConnected::streamOutWeights(ostream& os) const
 istream& FullyConnected::streamInWeights(istream& is)
 {
 	weights.clear();
-	for (uint i = 0; i < classesToMatch * multiply; i++) {
+	for (uint i = 0; i < classesToMatch;  i++) {
 		vector<double> smallWeights;
-		for (uint j = 0; j < nodesCount; j++) {
-			double x;
-			is >> x;
-			smallWeights.push_back(x);
+		for (uint j = 0; j < classesToMatch; j++) {
+			for (uint k = 0; k < nodesCount * nodesCount; k++) {
+				double x;
+				is >> x;
+				smallWeights.push_back(x);
+			}
 		}
 		weights.push_back(smallWeights);
 	}
-	for (uint i = 0; i < classesToMatch * multiply; i++) {
+	for (uint i = 0; i < classesToMatch; i++) {
 		double x;
 		is >> x;
 		bias.push_back(x);
@@ -115,14 +116,16 @@ void FullyConnected::assignRandomWeights()
 {
 	weights.clear();
 	double factor = RAND_MAX;
-	for (uint i = 0; i < classesToMatch * multiply; i++) {
+	for (uint i = 0; i < classesToMatch; i++) {
 		vector<double> smallWeights;
-		for (uint j = 0; j < nodesCount; j++) {
-			double x = rand();
-			smallWeights.push_back(x/factor);
+		for (uint j = 0; j < classesToMatch; j++) {
+			for (uint k = 0; k < nodesCount * nodesCount; k++) {
+				double x = rand();
+				smallWeights.push_back(x/factor - 0.5);
+			}
 		}
 		double x = rand();
-		bias.push_back(x / factor);
+		bias.push_back(x / factor - 0.5);
 		weights.push_back(smallWeights);
 	}
 }

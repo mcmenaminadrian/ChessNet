@@ -17,7 +17,7 @@ private:
 	void assignRandomWeights();
 
 public:
-	FullyConnected();
+	FullyConnected(const uint& filterCount);
 	void setUpVariables(const std::vector<FilterNet>& filters,
 		const uint& count, std::ifstream& weightFile);
 	std::ostream& streamOutWeights(std::ostream& os) const;
