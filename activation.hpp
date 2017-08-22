@@ -3,10 +3,11 @@
 
 using namespace std;
 
-const static double leakyReluFactor = 0.01;
+const static double leakyReluFactor = 0.0001;
 
 static double activationFunction(const double& input)
 {
+
 	if (input >= 0) {
 		return input;
 	} else {

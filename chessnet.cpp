@@ -73,18 +73,18 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	for (const auto& answers: actives.first) {
 		double iterationError = 0.0;
 		if (i == imageClass) {
-			iterationError = 500.0 - answers;
+			iterationError = 50 - answers;
 		} else {
-			iterationError = -500.0 - answers;
+			iterationError = -50 - answers;
 		}
 		basicErrors.push_back(iterationError);
 		totalError += (iterationError * iterationError) / 2;
 		i++;
-		cout << iterationError << ", ";
+		cout << iterationError << ":" << answers << ", ";
 	}
 	cout << endl;
 	cout << "==========" << endl;
-	cout << "FILE out: " << fileName << endl;
+	cout << "FILE: " << fileName << " Class: " << imageClass << endl;
 	cout << "Average Error is " << totalError / i << endl;
 
 	//now try error correction
@@ -96,7 +96,7 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	}
 
 	//fix up fully connected layer
-	outLayer.tryCorrections(0.01, filters, deltas);
+	outLayer.tryCorrections(0.1, filters, deltas);
 
 	//fix up filters
 	auto layerSizes = filters.front().getLayerSizes();
@@ -120,7 +120,6 @@ void ChessNet::tryFix(const double& factor, FilterNet& filter,
 
 
 }
-
 
 vector<double> ChessNet::reversedWeights(vector<double> kernel) const
 {

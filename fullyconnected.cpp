@@ -135,15 +135,19 @@ void FullyConnected::tryCorrections(const double &factor,
 	uint outNeuronCount = filters.size();
 	uint filterLayerSize = filters.at(0).getLayerSizes().back();
 	filterLayerSize *= filterLayerSize;
-	auto innerCorrections = vector<double>(filterLayerSize * outNeuronCount, 0.0);
+	auto innerCorrections = vector<double>
+		(filterLayerSize * outNeuronCount, 0.0);
 	auto fullCorrections =
 		vector<vector<double>>(outNeuronCount, innerCorrections);
 	uint finalLayer = filters.at(0).getDepth() - 1;
 	for (uint i = 0; i < outNeuronCount; i++) {
 		for (uint j = 0; j < filterLayerSize; j++) {
-			double grad = -1 * filters.at(i).getLayerActivations(finalLayer, j).first;
+			double out = -1 * filters.at(i).getLayerActivations
+				(finalLayer, j).first;
 			for (uint k = 0; k < outNeuronCount; k++) {
-				(fullCorrections.at(i)).at(j * outNeuronCount + k) = grad * deltas.at(k);
+				(fullCorrections.at(i))
+					.at(j * outNeuronCount + k) =
+					out * deltas.at(k);
 			}
 		}
 	}
