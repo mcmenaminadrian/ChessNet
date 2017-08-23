@@ -73,9 +73,9 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	for (const auto& answers: actives.first) {
 		double iterationError = 0.0;
 		if (i == imageClass) {
-			iterationError = 50 - answers;
+			iterationError = 1 - answers;
 		} else {
-			iterationError = -50 - answers;
+			iterationError = -1 - answers;
 		}
 		basicErrors.push_back(iterationError);
 		totalError += (iterationError * iterationError) / 2;
@@ -96,21 +96,33 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	}
 
 	//fix up fully connected layer
-	outLayer.tryCorrections(0.1, filters, deltas);
+	auto outCorrections = outLayer.tryCorrections(filters, deltas);
 
 	//fix up filters
 	auto layerSizes = filters.front().getLayerSizes();
 	auto depth = filters.front().getDepth();
-	for (auto& filter: filters) {
-		tryFix(0.1, filter, basicErrors, layerSizes, depth);
+
+		auto filterCorrections = tryFix(filters, basicErrors,
+			layerSizes, depth);
 	}
 }
 
-void ChessNet::tryFix(const double& factor, FilterNet& filter,
-	const vector<double>& basicErrors, const vector<uint>& layerSizes,
-	const uint depth)
+vector<vector<double>> ChessNet::tryFix(const vector<double>& basicErrors,
+	const vector<double>& outputDeltas)
 {
-	return;
+
+
+	for (uint i = 0; i < filters.size(); i++) {
+		//for fully connected layer
+		auto filter = filters.at(i);
+		uint finalLayerSize = filter.getLayerSizes().back();
+		finalLayerSize *= finalLayerSize;
+		uint filterDepth = filter.getDepth();
+		for (uint j = 0; j < finalLayerSize; i++)
+		{
+			double neuroActivation = filter.get
+	}
+
 	uint probe = depth - 1;
 	auto layersIt = layerSizes.rbegin();
 	vector<double>& weight = filter.fibreWeights.at(probe);

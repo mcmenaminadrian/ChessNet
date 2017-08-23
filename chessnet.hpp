@@ -10,10 +10,9 @@ private:
 	FullyConnected outLayer;
 	std::stringstream allWeights;
 	std::vector<double> reversedWeights(std::vector<double> kernel) const;
-	void tryFix(const double& factor, FilterNet& filter,
+	std::vector<std::vector<double> > tryFix(
 		const std::vector<double>& basicErrors,
-		const std::vector<uint>& layerSizes,
-		const uint depth);
+		const std::vector<double>& outputDeltas);
 public:
 	explicit ChessNet(const uint& width, const uint& height,
 		const uint& span, const uint& field,

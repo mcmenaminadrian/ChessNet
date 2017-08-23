@@ -63,7 +63,7 @@ void FilterNet::assignRandomWeights()
 		for (uint j = 0; j <= commonField * commonField; j++) {
 			double number = rand();
 			number /= factor;
-			weights.push_back(number);
+			weights.push_back(number / 1000);
 		}
 		fibreWeights.push_back(weights);
 	}

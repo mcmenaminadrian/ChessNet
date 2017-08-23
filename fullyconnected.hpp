@@ -26,7 +26,7 @@ public:
 		const std::vector<FilterNet>& filters);
 	std::pair<std::vector<double>&, std::vector<double>&>
 		returnActivations();
-	void tryCorrections(const double &factor,
+	std::vector<std::vector<double>> tryCorrections(
 		const std::vector<FilterNet>& filters,
 		const std::vector<double>& deltas);
 };

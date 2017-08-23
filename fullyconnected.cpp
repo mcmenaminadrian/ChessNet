@@ -35,6 +35,7 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 const vector<double>& FullyConnected::calculateSums(
 	const vector<FilterNet>& filters)
 {
+	fill(sums.begin(), sums.end(), 0.0);
 	auto filterIterator = filters.begin();
 	for (const auto& filterWeights :weights) {
 		uint i = 0;
@@ -119,17 +120,17 @@ void FullyConnected::assignRandomWeights()
 		for (uint j = 0; j < classesToMatch; j++) {
 			for (uint k = 0; k < nodesCount * nodesCount; k++) {
 				double x = rand();
-				smallWeights.push_back(x/factor - 0.5);
+				smallWeights.push_back(x/factor);
 			}
 		}
-		double x = rand();
+		double x = rand() / 1000;
 		bias.push_back(x / factor);
 		weights.push_back(smallWeights);
 	}
 }
 
 
-void FullyConnected::tryCorrections(const double &factor,
+vector<vector<double>> FullyConnected::tryCorrections(
 	const vector<FilterNet>& filters, const vector<double> &deltas)
 {
 	uint outNeuronCount = filters.size();
@@ -151,7 +152,7 @@ void FullyConnected::tryCorrections(const double &factor,
 			}
 		}
 	}
-
+/*
 	for (uint i = 0; i < outNeuronCount; i++) {
 		auto corrIt = fullCorrections.at(i).begin();
 		for (auto& weight: weights.at(i)) {
@@ -164,4 +165,13 @@ void FullyConnected::tryCorrections(const double &factor,
 		double biasCorrection = -1 * bias.at(i) * deltas.at(i);
 		bias.at(i) = bias.at(i) - (biasCorrection * factor);
 	}
+*/
+	vector<double> biasCorrections;
+	for (uint i = 0; i < filters.size(); i++) {
+		double correction = -1 * bias.at(i) * deltas.at(i);
+		biasConnections.push_back(bias.at(i) - biasCorrection));
+	}
+	fullCorrections.push_back(biasCorrections);
+
+	return fullCorrections;
 }
