@@ -168,10 +168,15 @@ vector<vector<double>> FullyConnected::tryCorrections(
 */
 	vector<double> biasCorrections;
 	for (uint i = 0; i < filters.size(); i++) {
-		double correction = -1 * bias.at(i) * deltas.at(i);
-		biasConnections.push_back(bias.at(i) - biasCorrection));
+		double biasCorrection = -1 * bias.at(i) * deltas.at(i);
+		biasCorrections.push_back(bias.at(i) - biasCorrection);
 	}
 	fullCorrections.push_back(biasCorrections);
 
 	return fullCorrections;
+}
+
+double FullyConnected::getWeight(const uint &in, const uint &out) const
+{
+	return (weights.at(out)).at(in);
 }

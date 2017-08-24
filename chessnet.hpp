@@ -10,7 +10,7 @@ private:
 	FullyConnected outLayer;
 	std::stringstream allWeights;
 	std::vector<double> reversedWeights(std::vector<double> kernel) const;
-	std::vector<std::vector<double> > tryFix(
+	void tryFix(
 		const std::vector<double>& basicErrors,
 		const std::vector<double>& outputDeltas);
 public:

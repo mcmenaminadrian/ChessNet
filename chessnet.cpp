@@ -99,15 +99,12 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	auto outCorrections = outLayer.tryCorrections(filters, deltas);
 
 	//fix up filters
-	auto layerSizes = filters.front().getLayerSizes();
-	auto depth = filters.front().getDepth();
 
-		auto filterCorrections = tryFix(filters, basicErrors,
-			layerSizes, depth);
-	}
+
+	tryFix(basicErrors, deltas);
 }
 
-vector<vector<double>> ChessNet::tryFix(const vector<double>& basicErrors,
+void ChessNet::tryFix(const vector<double>& basicErrors,
 	const vector<double>& outputDeltas)
 {
 
@@ -115,19 +112,29 @@ vector<vector<double>> ChessNet::tryFix(const vector<double>& basicErrors,
 	for (uint i = 0; i < filters.size(); i++) {
 		//for fully connected layer
 		auto filter = filters.at(i);
-		uint finalLayerSize = filter.getLayerSizes().back();
-		finalLayerSize *= finalLayerSize;
 		uint filterDepth = filter.getDepth();
-		for (uint j = 0; j < finalLayerSize; i++)
+		uint lowerLayerSize = filter.getLayerSizes().at(filterDepth - 2);
+		lowerLayerSize *= lowerLayerSize;
+		uint upperLayerSize = filter.getLayerSizes().at(filterDepth - 1);
+		upperLayerSize *= upperLayerSize;
+		// i -> j -> k
+		//calculate delta j
+		//sum deltas_k * weights_kj for each neuron in k
+		vector<double> delta_j(upperLayerSize, 0.0);
+		for (uint j = 0; j < upperLayerSize; j++) {
+			for (uint k = 0; k < filters.size(); k++) {
+				delta_j.at(j) += outputDeltas.at(k) * outLayer.getWeight(j, k);
+			}
+		//multiply by activation function deriv for each in j
+			delta_j.at(j) *= filters.at(i).getLayerActivations(filterDepth - 1, j).second;
+		}
+		vector<double> derivs;
+		//calculate deriv
+		//multiply by output in i
+		for (uint l = 0; l < lowerLayerSize; l++)
 		{
-			double neuroActivation = filter.get
-	}
-
-	uint probe = depth - 1;
-	auto layersIt = layerSizes.rbegin();
-	vector<double>& weight = filter.fibreWeights.at(probe);
-	for (auto error: basicErrors) {
-
+			//difficult bit!
+		}
 	}
 
 

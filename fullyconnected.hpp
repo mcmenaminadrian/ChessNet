@@ -29,6 +29,7 @@ public:
 	std::vector<std::vector<double>> tryCorrections(
 		const std::vector<FilterNet>& filters,
 		const std::vector<double>& deltas);
+	double getWeight(const uint& in, const uint& out) const;
 };
 
 #endif // FULLYCONNECTED_HPP
