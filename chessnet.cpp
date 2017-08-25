@@ -128,12 +128,27 @@ void ChessNet::tryFix(const vector<double>& basicErrors,
 		//multiply by activation function deriv for each in j
 			delta_j.at(j) *= filters.at(i).getLayerActivations(filterDepth - 1, j).second;
 		}
-		vector<double> derivs;
+		uint weightsCount = filter.fibreWeights.at(filterDepth - 1).size() - 1;
+		pair<double, uint> dummyCorrection(0.0, 0);
+		vector<pair<double, uint>> summedCorrections(weightsCount, dummyCorrection);
 		//calculate deriv
 		//multiply by output in i
-		for (uint l = 0; l < lowerLayerSize; l++)
+		for (uint j = 0; j < upperLayerSize; j++)
 		{
-			//difficult bit!
+			const HiddenNeuron& neuron = filter.getLayerNeuron(filterDepth - 1, j);
+			const auto& connex = neuron.getConnections();
+			for (uint k = 0; k < weightsCount; k++)
+			{
+				double currentCorrection = summedCorrections.at(k).first;
+				uint currentCount = summedCorrections.at(k).second;
+				double newCorrection = delta_j.at(j) * filter.getLayerActivations(filterDepth - 2, connex.at(k)).first;
+				summedCorrections.at(k) = pair<double, uint>(currentCorrection + newCorrection, ++currentCount);
+			}
+		}
+		vector<double> averageCorrections(weightsCount, 0.0);
+		for (uint k = 0; k < weightsCount; k++)
+		{
+			averageCorrections.at(k) = summedCorrections.at(k).first/summedCorrections.at(k).second;
 		}
 	}
 

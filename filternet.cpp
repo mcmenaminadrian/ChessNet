@@ -164,3 +164,10 @@ const pair<double, double> FilterNet::getLayerActivations(const uint& layer,
 	const vector<HiddenNeuron>& layerRequested = fibre.at(layer);
 	return layerRequested.at(neuron).getActivation();
 }
+
+const HiddenNeuron& FilterNet::getLayerNeuron(const uint &layer,
+	const uint &neuron) const
+{
+	const vector<HiddenNeuron>& layerRequested = fibre.at(layer);
+	return layerRequested.at(neuron);
+}

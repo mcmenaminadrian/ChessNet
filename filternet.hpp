@@ -27,6 +27,8 @@ public:
 	const std::pair<double, double> getLayerActivations(const uint& layer,
 		const uint& neuron) const;
 	uint getDepth() const {return fibreDepth;}
+	const HiddenNeuron& getLayerNeuron(const uint& layer,
+		const uint& neuron) const;
 };
 
 #endif // FILTERNET_HPP
