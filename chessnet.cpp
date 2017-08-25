@@ -100,11 +100,13 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 
 	//fix up filters
 
+	tryFix(deltas, outCorrections);
 
-	tryFix(deltas);
 }
 
-void ChessNet::tryFix(const vector<double> &outputDeltas)
+
+void ChessNet::tryFix(const vector<double> &outputDeltas,
+	const vector<vector<double>> &outCorrections)
 {
 	vector<vector<vector<double>>> corrections;
 	for (const auto& fibre: filters) {
@@ -113,6 +115,34 @@ void ChessNet::tryFix(const vector<double> &outputDeltas)
 		_tryFix(fibre, outputDeltas, fibreCorrections,
 			fibreDepth, true);
 		corrections.push_back(fibreCorrections);
+	}
+
+	/*
+		for (uint i = 0; i < outNeuronCount; i++) {
+			auto corrIt = fullCorrections.at(i).begin();
+			for (auto& weight: weights.at(i)) {
+				weight -= ((*corrIt) * factor);
+				corrIt++;
+			}
+		}
+
+		for (uint i = 0; i < filters.size(); i++) {
+			double biasCorrection = -1 * bias.at(i) * deltas.at(i);
+			bias.at(i) = bias.at(i) - (biasCorrection * factor);
+		}
+	*/
+	uint index = 0;
+	for (auto& fibreCorrections: corrections) {
+		auto& fibre = filters.at(index);
+		auto& weights = fibre.fibreWeights;
+		for (auto& layerCorrections: fibreCorrections) {
+			uint wIndex = 0;
+			auto& weightSet = weights.at(wIndex++);
+			for (auto& correction: layerCorrections) {
+				weightSet.at(wIndex++) -= correction;
+			}
+		}
+		index++;
 	}
 }
 
@@ -125,9 +155,9 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 
 	uint upperLayerSize = fibre.getLayerSizes().at(fibreDepth);
 	upperLayerSize *= upperLayerSize;
-		// i -> j -> k
-		//calculate delta j
-		//sum deltas_k * weights_kj for each neuron in k
+	// i -> j -> k
+	//calculate delta j
+	//sum deltas_k * weights_kj for each neuron in k
 	vector<double> delta_j(upperLayerSize, 0.0);
 	if (!first) {
 		auto weightsAbove = fibre.fibreWeights.at(fibreDepth + 1);
@@ -172,9 +202,15 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 			double currentCorrection =
 				summedCorrections.at(k).first;
 			uint currentCount = summedCorrections.at(k).second;
-			double newCorrection = delta_j.at(j) *
-				fibre.getLayerActivations(
-				fibreDepth, connex.at(k)).first;
+			double newCorrection;
+			if (fibreDepth > 0) {
+				newCorrection = delta_j.at(j) *
+					fibre.getLayerActivations(
+					fibreDepth - 1, connex.at(k)).first;
+			} else {
+				newCorrection = delta_j.at(j) *
+					inputNet.getInput(connex.at(k));
+			}
 			summedCorrections.at(k) = pair<double, uint>(
 				currentCorrection + newCorrection,
 				++currentCount);
@@ -189,6 +225,8 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 	}
 	fibreCorrections.push_back(averageCorrections);
 	_tryFix(fibre, delta_j, fibreCorrections, --fibreDepth, false);
+
+
 
 }
 

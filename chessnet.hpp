@@ -9,7 +9,8 @@ private:
 	ChessInput inputNet;
 	FullyConnected outLayer;
 	std::stringstream allWeights;
-	void tryFix(const std::vector<double>& outputDeltas);
+	void tryFix(const std::vector<double>& outputDeltas,
+		    const std::vector<std::vector<double>> &outCorrections);
 	void _tryFix(const FilterNet& fibre,
 		const std::vector<double>& outputDeltas,
 		std::vector<std::vector<double>>& fibreCorrections,

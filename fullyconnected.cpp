@@ -152,20 +152,7 @@ vector<vector<double>> FullyConnected::tryCorrections(
 			}
 		}
 	}
-/*
-	for (uint i = 0; i < outNeuronCount; i++) {
-		auto corrIt = fullCorrections.at(i).begin();
-		for (auto& weight: weights.at(i)) {
-			weight -= ((*corrIt) * factor);
-			corrIt++;
-		}
-	}
 
-	for (uint i = 0; i < filters.size(); i++) {
-		double biasCorrection = -1 * bias.at(i) * deltas.at(i);
-		bias.at(i) = bias.at(i) - (biasCorrection * factor);
-	}
-*/
 	vector<double> biasCorrections;
 	for (uint i = 0; i < filters.size(); i++) {
 		double biasCorrection = -1 * bias.at(i) * deltas.at(i);
