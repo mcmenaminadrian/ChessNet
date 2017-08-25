@@ -117,7 +117,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas)
 }
 
 void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas,
-	vector<vector<double>>& fibreCorrections, uint fibreDepth, bool first)
+	vector<vector<double>>& fibreCorrections, int fibreDepth, bool first)
 {
 	if (fibreDepth < 0) {
 		return;
@@ -130,7 +130,6 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 		//sum deltas_k * weights_kj for each neuron in k
 	vector<double> delta_j(upperLayerSize, 0.0);
 	if (!first) {
-		uint revConv = 0;
 		auto weightsAbove = fibre.fibreWeights.at(fibreDepth + 1);
 		uint weightsCountAbove =
 			weightsAbove.size() - 1;

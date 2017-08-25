@@ -13,7 +13,7 @@ private:
 	void _tryFix(const FilterNet& fibre,
 		const std::vector<double>& outputDeltas,
 		std::vector<std::vector<double>>& fibreCorrections,
-		uint fibreDepth, bool first);
+		int fibreDepth, bool first);
 public:
 	explicit ChessNet(const uint& width, const uint& height,
 		const uint& span, const uint& field,
