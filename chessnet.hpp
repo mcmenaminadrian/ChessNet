@@ -9,14 +9,10 @@ private:
 	ChessInput inputNet;
 	FullyConnected outLayer;
 	std::stringstream allWeights;
-	std::vector<double> reversedWeights(std::vector<double> kernel) const;
-	void tryFix(
-		const std::vector<double>& basicErrors,
-		const std::vector<double>& outputDeltas);
+	void tryFix(const std::vector<double>& outputDeltas);
 	void _tryFix(const FilterNet& fibre,
-		const std::vector<double>& basicErrors,
 		const std::vector<double>& outputDeltas,
-		std::vector<std::vector<std::vector<double>>>& corrections,
+		std::vector<std::vector<double>>& fibreCorrections,
 		uint fibreDepth, bool first);
 public:
 	explicit ChessNet(const uint& width, const uint& height,

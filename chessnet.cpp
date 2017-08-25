@@ -101,30 +101,29 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	//fix up filters
 
 
-	tryFix(basicErrors, deltas);
+	tryFix(deltas);
 }
 
-void ChessNet::tryFix(const vector<double> &basicErrors,
-	const vector<double> &outputDeltas)
+void ChessNet::tryFix(const vector<double> &outputDeltas)
 {
 	vector<vector<vector<double>>> corrections;
 	for (const auto& fibre: filters) {
 		uint fibreDepth = fibre.getDepth() - 1;
-		_tryFix(fibre, basicErrors, outputDeltas, corrections,
+		vector<vector<double>> fibreCorrections;
+		_tryFix(fibre, outputDeltas, fibreCorrections,
 			fibreDepth, true);
+		corrections.push_back(fibreCorrections);
 	}
 }
 
-void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& basicErrors,
-	const vector<double>& upperDeltas,
-	vector<vector<vector<double>>>& corrections, uint fibreDepth, bool first)
+void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas,
+	vector<vector<double>>& fibreCorrections, uint fibreDepth, bool first)
 {
-
 	if (fibreDepth < 0) {
 		return;
 	}
 
-	uint upperLayerSize = filter.getLayerSizes().at(fibreDepth);
+	uint upperLayerSize = fibre.getLayerSizes().at(fibreDepth);
 	upperLayerSize *= upperLayerSize;
 		// i -> j -> k
 		//calculate delta j
@@ -136,7 +135,9 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& basicErrors
 		uint weightsCountAbove =
 			weightsAbove.size() - 1;
 		for (uint k = 0; k < upperDeltas.size(); k++) {
-			auto connex = fibre.getLayerNeuron(fibreDepth + 1, k);
+			auto connex =
+				fibre.getLayerNeuron(fibreDepth + 1, k).
+				getConnections();
 			uint l = 0;
 			for (const auto& link: connex) {
 				delta_j.at(link) += upperDeltas.at(k) *
@@ -154,10 +155,10 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& basicErrors
 	}
 	for (uint j = 0; j < upperLayerSize; j++) {
 		//multiply by activation function deriv for each in j
-		delta_j.at(j) *= filters.at(i).
-			getLayerActivations(filterDepth - 1, j).second;
+		delta_j.at(j) *= fibre.
+			getLayerActivations(fibreDepth, j).second;
 	}
-	uint weightsCount = filter.fibreWeights.at(filterDepth - 1).size() - 1;
+	uint weightsCount = fibre.fibreWeights.at(fibreDepth).size() - 1;
 	pair<double, uint> dummyCorrection(0.0, 0);
 	vector<pair<double, uint>> summedCorrections(weightsCount, dummyCorrection);
 	//calculate deriv
@@ -165,7 +166,7 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& basicErrors
 	for (uint j = 0; j < upperLayerSize; j++)
 	{
 		const HiddenNeuron& neuron =
-			filter.getLayerNeuron(filterDepth - 1, j);
+			fibre.getLayerNeuron(fibreDepth, j);
 		const auto& connex = neuron.getConnections();
 		for (uint k = 0; k < weightsCount; k++)
 		{
@@ -173,8 +174,8 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& basicErrors
 				summedCorrections.at(k).first;
 			uint currentCount = summedCorrections.at(k).second;
 			double newCorrection = delta_j.at(j) *
-				filter.getLayerActivations(
-				filterDepth - 2, connex.at(k)).first;
+				fibre.getLayerActivations(
+				fibreDepth, connex.at(k)).first;
 			summedCorrections.at(k) = pair<double, uint>(
 				currentCorrection + newCorrection,
 				++currentCount);
@@ -183,17 +184,13 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& basicErrors
 	vector<double> averageCorrections(weightsCount, 0.0);
 	for (uint k = 0; k < weightsCount; k++)
 	{
-		averageCorrections.at(k) = summedCorrections.at(k).first/summedCorrections.at(k).second;
+		averageCorrections.at(k) =
+			(summedCorrections.at(k).first)/
+			(summedCorrections.at(k).second);
 	}
+	fibreCorrections.push_back(averageCorrections);
+	_tryFix(fibre, delta_j, fibreCorrections, --fibreDepth, false);
 
-}
-
-
-
-vector<double> ChessNet::reversedWeights(vector<double> kernel) const
-{
-	reverse(kernel.begin(), kernel.end());
-	return kernel;
 }
 
 void ChessNet::storeWeights()
