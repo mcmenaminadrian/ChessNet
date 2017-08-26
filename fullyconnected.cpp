@@ -167,3 +167,22 @@ double FullyConnected::getWeight(const uint &in, const uint &out) const
 {
 	return (weights.at(out)).at(in);
 }
+
+void FullyConnected::processCorrections(const uint& factor,
+	const vector<vector<double>> &outCorrections,
+	const vector<double>& deltas)
+{
+
+	for (uint i = 0; i < classesToMatch; i++) {
+		auto corrIt = outCorrections.at(i).begin();
+		for (auto& weight: weights.at(i)) {
+			weight -= ((*corrIt) * factor);
+			corrIt++;
+		}
+	}
+
+	for (uint i = 0; i < classesToMatch; i++) {
+		double biasCorrection = -1 * bias.at(i) * deltas.at(i);
+		bias.at(i) = bias.at(i) - (biasCorrection * factor);
+	}
+}

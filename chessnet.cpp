@@ -79,13 +79,21 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 		}
 		basicErrors.push_back(iterationError);
 		totalError += (iterationError * iterationError) / 2;
+		cout << i << ": Target: ";
+		if (i == imageClass) {
+			cout << "1";
+		} else {
+			cout << "-1";
+		}
+		cout << " Output: " << answers << " Error: " << iterationError;
+		cout << endl;
 		i++;
-		cout << iterationError << ":" << answers << ", ";
 	}
 	cout << endl;
 	cout << "==========" << endl;
 	cout << "FILE: " << fileName << " Class: " << imageClass << endl;
 	cout << "Average Error is " << totalError / i << endl;
+	cout << "++++++++++" << endl;
 
 	//now try error correction
 	vector<double> deltas;
@@ -117,32 +125,20 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 		corrections.push_back(fibreCorrections);
 	}
 
-	/*
-		for (uint i = 0; i < outNeuronCount; i++) {
-			auto corrIt = fullCorrections.at(i).begin();
-			for (auto& weight: weights.at(i)) {
-				weight -= ((*corrIt) * factor);
-				corrIt++;
-			}
-		}
+	outLayer.processCorrections(0.1, outCorrections, outputDeltas);
 
-		for (uint i = 0; i < filters.size(); i++) {
-			double biasCorrection = -1 * bias.at(i) * deltas.at(i);
-			bias.at(i) = bias.at(i) - (biasCorrection * factor);
-		}
-	*/
 	uint index = 0;
-	for (auto& fibreCorrections: corrections) {
-		auto& fibre = filters.at(index);
+	for (const auto& fibreCorrections: corrections) {
+		auto& fibre = filters.at(index++);
 		auto& weights = fibre.fibreWeights;
-		for (auto& layerCorrections: fibreCorrections) {
-			uint wIndex = 0;
-			auto& weightSet = weights.at(wIndex++);
-			for (auto& correction: layerCorrections) {
-				weightSet.at(wIndex++) -= correction;
+		uint weightsLayerIndex = 0;
+		for (const auto& layerCorrections: fibreCorrections) {
+			auto& weightSet = weights.at(weightsLayerIndex++);
+			uint indivWeightIndex = 0;
+			for (const auto& correction: layerCorrections) {
+				weightSet.at(indivWeightIndex) -= correction;
 			}
 		}
-		index++;
 	}
 }
 
@@ -162,7 +158,7 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 	if (!first) {
 		auto weightsAbove = fibre.fibreWeights.at(fibreDepth + 1);
 		uint weightsCountAbove =
-			weightsAbove.size() - 1;
+			weightsAbove.size();
 		for (uint k = 0; k < upperDeltas.size(); k++) {
 			auto connex =
 				fibre.getLayerNeuron(fibreDepth + 1, k).
@@ -187,7 +183,7 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 		delta_j.at(j) *= fibre.
 			getLayerActivations(fibreDepth, j).second;
 	}
-	uint weightsCount = fibre.fibreWeights.at(fibreDepth).size() - 1;
+	uint weightsCount = fibre.fibreWeights.at(fibreDepth).size();
 	pair<double, uint> dummyCorrection(0.0, 0);
 	vector<pair<double, uint>> summedCorrections(weightsCount, dummyCorrection);
 	//calculate deriv
@@ -204,12 +200,23 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 			uint currentCount = summedCorrections.at(k).second;
 			double newCorrection;
 			if (fibreDepth > 0) {
-				newCorrection = delta_j.at(j) *
-					fibre.getLayerActivations(
-					fibreDepth - 1, connex.at(k)).first;
+				if (k < weightsCount - 1) {
+					newCorrection = -delta_j.at(j) *
+						fibre.getLayerActivations(
+						fibreDepth - 1,
+						connex.at(k)).first;
+				} else {
+					//bias
+					newCorrection = -delta_j.at(j);
+				}
 			} else {
-				newCorrection = delta_j.at(j) *
-					inputNet.getInput(connex.at(k));
+				if (k < weightsCount - 1) {
+					newCorrection = -delta_j.at(j) *
+						inputNet.getInput(
+						connex.at(k));
+				} else {
+					newCorrection = -delta_j.at(j);
+				}
 			}
 			summedCorrections.at(k) = pair<double, uint>(
 				currentCorrection + newCorrection,
@@ -223,7 +230,7 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 			(summedCorrections.at(k).first)/
 			(summedCorrections.at(k).second);
 	}
-	fibreCorrections.push_back(averageCorrections);
+	fibreCorrections.insert(fibreCorrections.begin(), averageCorrections);
 	_tryFix(fibre, delta_j, fibreCorrections, --fibreDepth, false);
 
 

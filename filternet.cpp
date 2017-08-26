@@ -11,7 +11,8 @@
 
 using namespace std;
 
-
+#define FILTEREDIMAGES
+static uint imageNumber = 0;
 
 FilterNet::FilterNet(const uint& width, const int& span,
 	const uint& field, const uint& depth,
@@ -143,8 +144,8 @@ void FilterNet::_computeActivations(const vector<double>& inputs,
 			j++;
 		}
 	}
-	int randomValue = qrand()%100000;
-	QString fileN = QString::number(randomValue) + QString(".jpg");
+	//int randomValue = qrand()%100000;
+	QString fileN = QString::number(imageNumber++) + QString(".jpg");
 	filteredImage.save(fileN);
 #endif
 

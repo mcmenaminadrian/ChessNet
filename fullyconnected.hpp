@@ -30,6 +30,9 @@ public:
 		const std::vector<FilterNet>& filters,
 		const std::vector<double>& deltas);
 	double getWeight(const uint& in, const uint& out) const;
+	void processCorrections(const uint& factor,
+		const std::vector<std::vector<double>> &outCorrections,
+		const std::vector<double>& deltas);
 };
 
 #endif // FULLYCONNECTED_HPP
