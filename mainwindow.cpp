@@ -26,7 +26,7 @@ static const uint imageWidth = 100;
 static const uint imageHeight = 100;
 static const uint convSpan = 1;
 static const uint field = 3;
-static const uint filters = 25;
+static const uint filters = 26;
 static const uint fibreDepth = 7;
 
 
@@ -65,7 +65,7 @@ void MainWindow::on_fileSelect_clicked()
 	for (auto tests: testFileList) {
 		QImage inputFile(QString(tests.first.c_str()), "JPG");
 		chess.loadInput(inputFile);
-		for (uint i = 0 ; i < 2; i++) {
+		for (uint i = 0 ; i < 10; i++) {
 			chess.feedForward(tests.first, tests.second);
 		}
 	}

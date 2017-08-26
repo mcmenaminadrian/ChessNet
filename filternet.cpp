@@ -11,7 +11,7 @@
 
 using namespace std;
 
-#define FILTEREDIMAGES
+
 static uint imageNumber = 0;
 
 FilterNet::FilterNet(const uint& width, const int& span,
@@ -46,9 +46,9 @@ FilterNet::FilterNet(const uint& width, const int& span,
 		effectiveWidth = networkSize;
 	}
 
-	loadWeights(inFile);
+	//loadWeights(inFile);
 	//NB only use next line at start up
-	//assignRandomWeights();
+	assignRandomWeights();
 }
 
 void FilterNet::loadWeights(ifstream& inFile)

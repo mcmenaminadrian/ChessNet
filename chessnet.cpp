@@ -73,17 +73,17 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	for (const auto& answers: actives.first) {
 		double iterationError = 0.0;
 		if (i == imageClass) {
-			iterationError = 1 - answers;
+			iterationError = 50 - answers;
 		} else {
-			iterationError = -1 - answers;
+			iterationError = -50 - answers;
 		}
 		basicErrors.push_back(iterationError);
 		totalError += (iterationError * iterationError) / 2;
 		cout << i << ": Target: ";
 		if (i == imageClass) {
-			cout << "1";
+			cout << "10";
 		} else {
-			cout << "-1";
+			cout << "-10";
 		}
 		cout << " Output: " << answers << " Error: " << iterationError;
 		cout << endl;
@@ -136,7 +136,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 			auto& weightSet = weights.at(weightsLayerIndex++);
 			uint indivWeightIndex = 0;
 			for (const auto& correction: layerCorrections) {
-				weightSet.at(indivWeightIndex) -= correction;
+				weightSet.at(indivWeightIndex) -= correction * 0.1;
 			}
 		}
 	}
