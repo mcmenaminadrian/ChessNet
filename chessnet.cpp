@@ -73,17 +73,17 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 	for (const auto& answers: actives.first) {
 		double iterationError = 0.0;
 		if (i == imageClass) {
-			iterationError = 50 - answers;
+			iterationError = 1 - answers;
 		} else {
-			iterationError = -50 - answers;
+			iterationError = -1 - answers;
 		}
 		basicErrors.push_back(iterationError);
 		totalError += (iterationError * iterationError) / 2;
 		cout << i << ": Target: ";
 		if (i == imageClass) {
-			cout << "10";
+			cout << "1";
 		} else {
-			cout << "-10";
+			cout << "-1";
 		}
 		cout << " Output: " << answers << " Error: " << iterationError;
 		cout << endl;

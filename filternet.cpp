@@ -46,9 +46,9 @@ FilterNet::FilterNet(const uint& width, const int& span,
 		effectiveWidth = networkSize;
 	}
 
-	//loadWeights(inFile);
+	loadWeights(inFile);
 	//NB only use next line at start up
-	assignRandomWeights();
+	//assignRandomWeights();
 }
 
 void FilterNet::loadWeights(ifstream& inFile)
@@ -64,7 +64,7 @@ void FilterNet::assignRandomWeights()
 		for (uint j = 0; j <= commonField * commonField; j++) {
 			double number = rand();
 			number /= factor;
-			weights.push_back(number / 1000);
+			weights.push_back(number - 0.5);
 		}
 		fibreWeights.push_back(weights);
 	}

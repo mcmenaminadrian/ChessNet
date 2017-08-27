@@ -27,9 +27,9 @@ void FullyConnected::setUpVariables(const vector<FilterNet>& filters,
 	classesToMatch = filters.size();
 	nodesCount = count;
 	layersCount = filters.front().getLayerSizes().size();
-	//streamInWeights(weightFile);
+	streamInWeights(weightFile);
 	//NB: not to use in production
-	assignRandomWeights();
+	//assignRandomWeights();
 }
 
 const vector<double>& FullyConnected::calculateSums(
@@ -63,9 +63,9 @@ pair<vector<double>&, vector<double>&> FullyConnected::returnActivations()
 	activations.clear();
 	activationDerivatives.clear();
 	for (const auto& summations: sums) {
-		activations.push_back(activationFunction(summations));
+		activations.push_back(fcActivationFunction(summations));
 		activationDerivatives.push_back(
-			activationDerivative(summations));
+			fcActivationDerivative(summations));
 	}
 	return pair<vector<double>&, vector<double>&>(
 		activations, activationDerivatives);
@@ -120,11 +120,11 @@ void FullyConnected::assignRandomWeights()
 		for (uint j = 0; j < classesToMatch; j++) {
 			for (uint k = 0; k < nodesCount * nodesCount; k++) {
 				double x = rand();
-				smallWeights.push_back(x/factor);
+				smallWeights.push_back(x/factor - 0.5);
 			}
 		}
-		double x = rand() / 1000;
-		bias.push_back(x / factor);
+		double x = rand();
+		bias.push_back(x / factor - 0.5);
 		weights.push_back(smallWeights);
 	}
 }
