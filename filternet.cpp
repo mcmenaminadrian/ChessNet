@@ -11,6 +11,7 @@
 
 using namespace std;
 
+#define NFILTEREDIMAGES
 
 static uint imageNumber = 0;
 

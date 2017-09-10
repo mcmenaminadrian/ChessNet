@@ -10,7 +10,7 @@ private:
 	FullyConnected outLayer;
 	std::stringstream allWeights;
 	void tryFix(const std::vector<double>& outputDeltas,
-		    const std::vector<std::vector<double>> &outCorrections);
+		    const std::vector<std::vector<double>> &outCorrections, uint fact);
 	void _tryFix(const FilterNet& fibre,
 		const std::vector<double>& outputDeltas,
 		std::vector<std::vector<double>>& fibreCorrections,
@@ -22,7 +22,7 @@ public:
 		std::ifstream& weightsIn);
 	~ChessNet();
 	void loadInput(const QImage& img);
-	void feedForward(std::__cxx11::string&, uint imageClass);
+	void feedForward(std::__cxx11::string&, uint imageClass, uint fact);
 	void storeWeights();
 };
 #endif // CHESSNET_HPP

@@ -56,7 +56,7 @@ void ChessNet::loadInput(const QImage& imgIn)
 	inputNet.setInput(imgIn);
 }
 
-void ChessNet::feedForward(string& fileName, uint imageClass)
+void ChessNet::feedForward(string& fileName, uint imageClass, uint fact)
 {
 
 	const vector<double> inputVector = inputNet.getInputs();
@@ -108,14 +108,15 @@ void ChessNet::feedForward(string& fileName, uint imageClass)
 
 	//fix up filters
 
-	tryFix(deltas, outCorrections);
+	tryFix(deltas, outCorrections, fact + 1);
 
 }
 
 
 void ChessNet::tryFix(const vector<double> &outputDeltas,
-	const vector<vector<double>> &outCorrections)
+	const vector<vector<double>> &outCorrections, uint fact)
 {
+	cout << "CORRECTION: " << fact << endl;
 	vector<vector<vector<double>>> corrections;
 	for (const auto& fibre: filters) {
 		uint fibreDepth = fibre.getDepth() - 1;
@@ -125,7 +126,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 		corrections.push_back(fibreCorrections);
 	}
 
-	outLayer.processCorrections(0.1, outCorrections, outputDeltas);
+	outLayer.processCorrections(0.75/fact, outCorrections, outputDeltas);
 
 	uint index = 0;
 	for (const auto& fibreCorrections: corrections) {
@@ -136,7 +137,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 			auto& weightSet = weights.at(weightsLayerIndex++);
 			uint indivWeightIndex = 0;
 			for (const auto& correction: layerCorrections) {
-				weightSet.at(indivWeightIndex) -= correction * 0.1;
+				weightSet.at(indivWeightIndex) -= correction * (0.75/fact);
 			}
 		}
 	}
@@ -229,6 +230,9 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 		averageCorrections.at(k) =
 			(summedCorrections.at(k).first)/
 			(summedCorrections.at(k).second);
+		if (abs(averageCorrections.at(k)) < 0.0001) {
+			averageCorrections.at(k) = 0.0;
+		}
 	}
 	fibreCorrections.insert(fibreCorrections.begin(), averageCorrections);
 	_tryFix(fibre, delta_j, fibreCorrections, --fibreDepth, false);

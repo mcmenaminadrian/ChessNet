@@ -146,9 +146,13 @@ vector<vector<double>> FullyConnected::tryCorrections(
 			double out = -1 * filters.at(i).getLayerActivations
 				(finalLayer, j).first;
 			for (uint k = 0; k < outNeuronCount; k++) {
+				double innerDelta = deltas.at(k);
+				if (abs(deltas.at(k)) < 0.01) {
+					innerDelta = 0.0;
+				}
 				(fullCorrections.at(i))
 					.at(j * outNeuronCount + k) =
-					out * deltas.at(k);
+					out * innerDelta;
 			}
 		}
 	}
