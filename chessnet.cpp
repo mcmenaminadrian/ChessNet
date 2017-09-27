@@ -126,7 +126,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 		corrections.push_back(fibreCorrections);
 	}
 
-	outLayer.processCorrections(0.75/fact, outCorrections, outputDeltas);
+	outLayer.processCorrections(0.5/fact, outCorrections, outputDeltas);
 
 	uint index = 0;
 	for (const auto& fibreCorrections: corrections) {
@@ -137,7 +137,8 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 			auto& weightSet = weights.at(weightsLayerIndex++);
 			uint indivWeightIndex = 0;
 			for (const auto& correction: layerCorrections) {
-				weightSet.at(indivWeightIndex) -= correction * (0.75/fact);
+				weightSet.at(indivWeightIndex++) -=
+					0.5 * correction / fact;
 			}
 		}
 	}
@@ -167,8 +168,8 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 			uint l = 0;
 			for (const auto& link: connex) {
 				delta_j.at(link) += upperDeltas.at(k) *
-					weightsAbove.at(l++);
-				l %= weightsCountAbove;
+					weightsAbove.at(l);
+				(++l) %= weightsCountAbove;
 			}
 		}
 	} else {
@@ -230,15 +231,9 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 		averageCorrections.at(k) =
 			(summedCorrections.at(k).first)/
 			(summedCorrections.at(k).second);
-		if (abs(averageCorrections.at(k)) < 0.0001) {
-			averageCorrections.at(k) = 0.0;
-		}
 	}
 	fibreCorrections.insert(fibreCorrections.begin(), averageCorrections);
 	_tryFix(fibre, delta_j, fibreCorrections, --fibreDepth, false);
-
-
-
 }
 
 void ChessNet::storeWeights()

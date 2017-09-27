@@ -62,7 +62,7 @@ void MainWindow::on_fileSelect_clicked()
 		fibreDepth, weightsFile);
 	vector<pair<string, uint>> testFileList =
 		getTestFileList(trainingName);
-	for (uint i = 0; i < 1000; i++) {
+	for (uint i = 0; i < 50; i++) {
 	for (auto tests: testFileList) {
 		QImage inputFile(QString(tests.first.c_str()), "JPG");
 		chess.loadInput(inputFile);
