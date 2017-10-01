@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <QImage>
 #include <sstream>
+#include <thread>
+#include <functional>
 #include "sys/types.h"
 #include "chessinput.hpp"
 #include "hiddenneuron.hpp"
@@ -112,20 +114,40 @@ void ChessNet::feedForward(string& fileName, uint imageClass, uint fact)
 
 }
 
+void ChessNet::fixThread(FilterNet fibre, vector<double> outputDeltas,
+	vector<vector<double>>& fibreCorrections)
+{
+	uint fibreDepth = fibre.getDepth() - 1;
+	_tryFix(fibre, outputDeltas, fibreCorrections, fibreDepth, true);
+}
 
 void ChessNet::tryFix(const vector<double> &outputDeltas,
 	const vector<vector<double>> &outCorrections, uint fact)
 {
 	cout << "CORRECTION: " << fact << endl;
-	vector<vector<vector<double>>> corrections;
+	vector<double> dummyInner(1, 0.0);
+	vector<vector<double>> dummyOuter(1, dummyInner);
+	vector<vector<vector<double>>> corrections(filters.size(), dummyOuter);
+	vector<thread> threads;
+	uint indexFilters = 0;
+/*	vector<vector<vector<double>>> corrections; */
 	for (const auto& fibre: filters) {
+		threads.push_back(thread(
+			&ChessNet::fixThread, this, ref(fibre),
+			ref(outputDeltas),
+			ref(corrections.at(indexFilters++))));
+	}
+	for (auto& th: threads) {
+		th.join();
+	}
+/*
 		uint fibreDepth = fibre.getDepth() - 1;
 		vector<vector<double>> fibreCorrections;
 		_tryFix(fibre, outputDeltas, fibreCorrections,
 			fibreDepth, true);
 		corrections.push_back(fibreCorrections);
 	}
-
+*/
 	outLayer.processCorrections(0.5/fact, outCorrections, outputDeltas);
 
 	uint index = 0;
@@ -233,6 +255,9 @@ void ChessNet::_tryFix(const FilterNet& fibre, const vector<double>& upperDeltas
 			(summedCorrections.at(k).second);
 	}
 	fibreCorrections.insert(fibreCorrections.begin(), averageCorrections);
+	if (first) {
+		fibreCorrections.pop_back();
+	}
 	_tryFix(fibre, delta_j, fibreCorrections, --fibreDepth, false);
 }
 

@@ -15,6 +15,9 @@ private:
 		const std::vector<double>& outputDeltas,
 		std::vector<std::vector<double>>& fibreCorrections,
 		int fibreDepth, bool first);
+	void fixThread(FilterNet fibre,
+		std::vector<double> outputDeltas,
+		std::vector<std::vector<double> >& fibreCorrections);
 public:
 	explicit ChessNet(const uint& width, const uint& height,
 		const uint& span, const uint& field,
