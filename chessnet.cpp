@@ -130,7 +130,6 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 	vector<vector<vector<double>>> corrections(filters.size(), dummyOuter);
 	vector<thread> threads;
 	uint indexFilters = 0;
-/*	vector<vector<vector<double>>> corrections; */
 	for (const auto& fibre: filters) {
 		threads.push_back(thread(
 			&ChessNet::fixThread, this, ref(fibre),
@@ -140,14 +139,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 	for (auto& th: threads) {
 		th.join();
 	}
-/*
-		uint fibreDepth = fibre.getDepth() - 1;
-		vector<vector<double>> fibreCorrections;
-		_tryFix(fibre, outputDeltas, fibreCorrections,
-			fibreDepth, true);
-		corrections.push_back(fibreCorrections);
-	}
-*/
+
 	outLayer.processCorrections(0.5/fact, outCorrections, outputDeltas);
 
 	uint index = 0;

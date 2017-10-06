@@ -30,7 +30,7 @@ public:
 		const std::vector<FilterNet>& filters,
 		const std::vector<double>& deltas);
 	double getWeight(const uint& in, const uint& out) const;
-	void processCorrections(const uint& factor,
+	void processCorrections(const double& factor,
 		const std::vector<std::vector<double>> &outCorrections,
 		const std::vector<double>& deltas);
 };

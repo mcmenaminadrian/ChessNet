@@ -5,7 +5,7 @@
 
 using namespace std;
 
-const static double leakyReluFactor = 0.01;
+const static double leakyReluFactor = 0.1;
 
 static double activationFunction(const double& input)
 {

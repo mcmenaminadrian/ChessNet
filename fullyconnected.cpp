@@ -168,7 +168,7 @@ double FullyConnected::getWeight(const uint &in, const uint &out) const
 	return (weights.at(out)).at(in);
 }
 
-void FullyConnected::processCorrections(const uint& factor,
+void FullyConnected::processCorrections(const double& factor,
 	const vector<vector<double>> &outCorrections,
 	const vector<double>& deltas)
 {
