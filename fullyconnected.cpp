@@ -153,13 +153,13 @@ vector<vector<double>> FullyConnected::tryCorrections(
 		}
 	}
 
-	vector<double> biasCorrections;
+/*	vector<double> biasCorrections;
 	for (uint i = 0; i < filters.size(); i++) {
 		double biasCorrection = -1 * bias.at(i) * deltas.at(i);
 		biasCorrections.push_back(bias.at(i) - biasCorrection);
 	}
 	fullCorrections.push_back(biasCorrections);
-
+*/
 	return fullCorrections;
 }
 

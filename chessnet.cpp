@@ -140,7 +140,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 		th.join();
 	}
 
-	outLayer.processCorrections(0.5/fact, outCorrections, outputDeltas);
+	outLayer.processCorrections(0.005, outCorrections, outputDeltas);
 
 	uint index = 0;
 	for (const auto& fibreCorrections: corrections) {
@@ -152,7 +152,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 			uint indivWeightIndex = 0;
 			for (const auto& correction: layerCorrections) {
 				weightSet.at(indivWeightIndex++) -=
-					0.5 * correction / fact;
+					0.005 * correction;
 			}
 		}
 	}
