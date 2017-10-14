@@ -102,7 +102,11 @@ void ChessNet::feedForward(string& fileName, uint imageClass, uint fact)
 	vector<double>::iterator it = basicErrors.begin();
 	i = 0;
 	for (const auto& derivs: actives.second) {
-		deltas.push_back(derivs * (*it++));
+		double errValue = *it++;
+		if (fabs(errValue < 0.01)) {
+			errValue = 0.0;
+		}
+		deltas.push_back(derivs * errValue);
 	}
 
 	//fix up fully connected layer
