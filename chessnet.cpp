@@ -103,7 +103,7 @@ void ChessNet::feedForward(string& fileName, uint imageClass, uint fact)
 	i = 0;
 	for (const auto& derivs: actives.second) {
 		double errValue = *it++;
-		if (fabs(errValue) < 0.01) {
+		if (fabs(errValue) < 0.2) {
 			errValue = 0.0;
 		}
 		deltas.push_back(derivs * errValue);
@@ -144,7 +144,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 		th.join();
 	}
 
-	outLayer.processCorrections(0.05, outCorrections, outputDeltas);
+	outLayer.processCorrections(0.01, outCorrections, outputDeltas);
 
 	uint index = 0;
 	for (const auto& fibreCorrections: corrections) {
@@ -156,7 +156,7 @@ void ChessNet::tryFix(const vector<double> &outputDeltas,
 			uint indivWeightIndex = 0;
 			for (const auto& correction: layerCorrections) {
 				weightSet.at(indivWeightIndex++) -=
-					0.05 * correction;
+					0.01 * correction;
 			}
 		}
 	}

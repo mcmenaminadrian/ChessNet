@@ -120,11 +120,11 @@ void FullyConnected::assignRandomWeights()
 		for (uint j = 0; j < classesToMatch; j++) {
 			for (uint k = 0; k < nodesCount * nodesCount; k++) {
 				double x = rand();
-				smallWeights.push_back(x/factor - 0.5);
+				smallWeights.push_back((x/factor - 0.5)/3);
 			}
 		}
 		double x = rand();
-		bias.push_back(x / factor - 0.5);
+		bias.push_back((x / factor - 0.5)/3);
 		weights.push_back(smallWeights);
 	}
 }
