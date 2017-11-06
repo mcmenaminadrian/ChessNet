@@ -1,4 +1,3 @@
-./images/JPEG_FRAG_59
 ./images/JPEG_FRAG_5a005ff3.jpeg 3
 ./images/JPEG_FRAG_5a0060a5.jpeg 20
 ./images/JPEG_FRAG_5a0060c8.jpeg 8
