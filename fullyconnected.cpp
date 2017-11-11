@@ -63,9 +63,9 @@ pair<vector<double>&, vector<double>&> FullyConnected::returnActivations()
 	activations.clear();
 	activationDerivatives.clear();
 	for (const auto& summations: sums) {
-		activations.push_back(activationFunction(summations));
+		activations.push_back(fcActivationFunction(summations));
 		activationDerivatives.push_back(
-			activationDerivative(summations));
+			fcActivationDerivative(summations));
 	}
 	return pair<vector<double>&, vector<double>&>(
 		activations, activationDerivatives);
