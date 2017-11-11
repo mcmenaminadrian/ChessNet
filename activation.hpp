@@ -28,12 +28,12 @@ static double activationDerivative(const double& input)
 
 static double fcActivationFunction(const double& input)
 {
-	return input / (1.0 + abs(input));
+	return input / (1.0 + fabs(input));
 }
 
 static double fcActivationDerivative(const double& input)
 {
-	return 1.0 / ((1.0 + abs(input)) * (1.0 + abs(input)));
+	return 1.0 / ((1.0 + fabs(input)) * (1.0 + fabs(input)));
 }
 
 #endif // ACTIVATION
