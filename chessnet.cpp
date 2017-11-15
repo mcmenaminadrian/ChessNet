@@ -103,7 +103,7 @@ void ChessNet::feedForward(string& fileName, uint imageClass, uint fact)
 	i = 0;
 	for (const auto& derivs: actives.second) {
 		double errValue = *it++;
-		if (fabs(errValue) < 0.2) {
+		if (fabs(errValue) < 0.01) {
 			errValue = 0.0;
 		}
 		deltas.push_back(derivs * errValue);
