@@ -40,7 +40,7 @@
 ./images/JPEG_FRAG_5a22b96b.jpeg 0
 ./images/JPEG_FRAG_5a22b97a.jpeg 2
 ./images/JPEG_FRAG_5a22b673.jpeg 1
-./images/JPEG_FRAG_5a22b682.jpeg 0
+./images/JPEG_FRAG_5a22b782.jpeg 0
 ./images/JPEG_FRAG_5a22b787.jpeg 1
 ./images/JPEG_FRAG_5a22b795.jpeg 14
 ./images/JPEG_FRAG_5a22b808.jpeg 1
